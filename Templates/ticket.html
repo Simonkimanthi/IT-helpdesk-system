@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ticket #{{ ticket["id"] }}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 25px 5%;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .ticket-number {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .detail {
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            font-size: 17px;
+        }
+
+        .description,
+        .resolution-display {
+            background: #f8fafc;
+            padding: 18px;
+            border-radius: 8px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .priority {
+            font-weight: bold;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .status-form,
+        .resolution-form {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-family: Arial, sans-serif;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .update-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .update-button:hover {
+            background: #1d4ed8;
+        }
+
+        .back-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>IT Help Desk</h1>
+</header>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>Ticket Details</h2>
+
+        <div class="ticket-number">
+            Ticket #{{ ticket["id"] }}
+        </div>
+
+        <div class="detail">
+            <div class="detail-label">User</div>
+            <div class="detail-value">
+                {{ ticket["name"] }}
+            </div>
+        </div>
+
+        <div class="detail">
+            <div class="detail-label">Email</div>
+            <div class="detail-value">
+                {{ ticket["email"] }}
+            </div>
+        </div>
+
+        <div class="detail">
+            <div class="detail-label">Subject</div>
+            <div class="detail-value">
+                {{ ticket["subject"] }}
+            </div>
+        </div>
+
+        <div class="detail">
+            <div class="detail-label">Description</div>
+            <div class="description">
+                {{ ticket["description"] }}
+            </div>
+        </div>
+
+        <div class="detail">
+            <div class="detail-label">Priority</div>
+            <div class="detail-value priority">
+                {{ ticket["priority"] }}
+            </div>
+        </div>
+
+        <div class="detail">
+            <div class="detail-label">Current Status</div>
+            <div class="detail-value">
+                <span class="status">
+                    {{ ticket["status"] }}
+                </span>
+            </div>
+        </div>
+
+
+        <!-- Status Update -->
+
+        <div class="status-form">
+
+            <form method="POST"
+                  action="/update-status/{{ ticket['id'] }}">
+
+                <label for="status">
+                    Update Ticket Status
+                </label>
+
+                <select name="status" id="status">
+
+                    <option value="Open"
+                        {% if ticket["status"] == "Open" %}
+                            selected
+                        {% endif %}>
+                        Open
+                    </option>
+
+                    <option value="In Progress"
+                        {% if ticket["status"] == "In Progress" %}
+                            selected
+                        {% endif %}>
+                        In Progress
+                    </option>
+
+                    <option value="Resolved"
+                        {% if ticket["status"] == "Resolved" %}
+                            selected
+                        {% endif %}>
+                        Resolved
+                    </option>
+
+                </select>
+
+                <button class="update-button" type="submit">
+                    Update Status
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- Resolution -->
+
+        <div class="resolution-form">
+
+            <form method="POST"
+                  action="/update-resolution/{{ ticket['id'] }}">
+
+                <label for="resolution">
+                    Technician Resolution / Notes
+                </label>
+
+                <textarea
+                    name="resolution"
+                    id="resolution"
+                    placeholder="Describe what was done to resolve the issue..."
+                >{{ ticket["resolution"] }}</textarea>
+
+                <button class="update-button" type="submit">
+                    Save Resolution
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- Saved Resolution -->
+
+        {% if ticket["resolution"] %}
+
+        <div class="detail">
+            <div class="detail-label">
+                Saved Resolution
+            </div>
+
+            <div class="resolution-display">
+                {{ ticket["resolution"] }}
+            </div>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <a class="back-link" href="/dashboard">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ticket Submitted | IT Help Desk</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f5f7;
+            color: #252525;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #dedfe1;
+            border-radius: 8px;
+            padding: 45px 40px;
+            text-align: center;
+        }
+
+        .mark {
+            width: 55px;
+            height: 55px;
+            margin: 0 auto 22px;
+            border: 2px solid #4d6b57;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4d6b57;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #252a31;
+            margin-bottom: 12px;
+        }
+
+        .message {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .ticket-box {
+            background: #f5f6f7;
+            border: 1px solid #e0e2e4;
+            border-radius: 6px;
+            padding: 18px;
+            margin-bottom: 28px;
+        }
+
+        .ticket-label {
+            display: block;
+            color: #777;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 7px;
+        }
+
+        .ticket-number {
+            font-size: 25px;
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .primary {
+            background: #343a40;
+            color: white;
+        }
+
+        .primary:hover {
+            background: #20252a;
+        }
+
+        .secondary {
+            border: 1px solid #cfd3d8;
+            color: #444;
+            background: white;
+        }
+
+        .secondary:hover {
+            background: #f5f5f5;
+        }
+
+        @media (max-width: 500px) {
+            .card {
+                padding: 35px 25px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="card">
+
+            <div class="mark">
+                ✓
+            </div>
+
+            <h1>Ticket Submitted</h1>
+
+            <p class="message">
+                Your support request has been successfully received.
+                A technician will review the ticket and take the necessary action.
+            </p>
+
+            <div class="ticket-box">
+
+                <span class="ticket-label">
+                    Your Ticket Number
+                </span>
+
+                <div class="ticket-number">
+                    #{{ ticket_id }}
+                </div>
+
+            </div>
+
+            <div class="actions">
+
+                <a href="/" class="button primary">
+                    Submit Another Ticket
+                </a>
+
+                <a href="/login" class="button secondary">
+                    Technician Login
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

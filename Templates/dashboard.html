@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Technician Dashboard | IT Help Desk</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f5f7;
+            color: #252525;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 230px;
+            height: 100vh;
+            background: #252a31;
+            color: white;
+            padding: 25px 18px;
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 35px;
+            padding-left: 10px;
+        }
+
+        .nav-title {
+            font-size: 11px;
+            color: #9da3aa;
+            text-transform: uppercase;
+            margin: 0 0 10px 10px;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            display: block;
+            color: #d7d9dc;
+            text-decoration: none;
+            padding: 12px 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover {
+            background: #343a42;
+            color: white;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+            color: #d7d9dc;
+            text-decoration: none;
+            padding: 12px 10px;
+            font-size: 14px;
+        }
+
+        .main {
+            margin-left: 230px;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 25px;
+            color: #252a31;
+        }
+
+        .user {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e1e3e6;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .stat-label {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 27px;
+            font-weight: bold;
+            color: #252a31;
+        }
+
+        .section {
+            background: white;
+            border: 1px solid #e1e3e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            color: #252a31;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 8px;
+        }
+
+        .search-input {
+            width: 260px;
+            padding: 10px 12px;
+            border: 1px solid #cfd3d8;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #6b7280;
+        }
+
+        .search-button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 5px;
+            background: #343a40;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .search-button:hover {
+            background: #20252a;
+        }
+
+        .clear-button {
+            padding: 10px 14px;
+            border: 1px solid #cfd3d8;
+            border-radius: 5px;
+            background: white;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f7f7f8;
+            color: #555;
+            font-size: 12px;
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        td {
+            padding: 15px 16px;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        .ticket-link {
+            color: #343a40;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .ticket-link:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            background: #e8f3ec;
+            color: #356346;
+        }
+
+        .priority-medium {
+            background: #f4efdf;
+            color: #76632d;
+        }
+
+        .priority-high {
+            background: #f7e7dc;
+            color: #8a4f2b;
+        }
+
+        .priority-critical {
+            background: #f2dddd;
+            color: #8a3535;
+        }
+
+        .status-open {
+            background: #e8edf2;
+            color: #485765;
+        }
+
+        .status-progress {
+            background: #eee9dc;
+            color: #6d5d32;
+        }
+
+        .status-resolved {
+            background: #e5eee8;
+            color: #42624c;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 45px;
+            color: #777;
+        }
+
+        .create-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #343a40;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .create-button:hover {
+            background: #20252a;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-left: 190px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .search-form {
+                width: 100%;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .logout {
+                position: relative;
+                left: auto;
+                right: auto;
+                bottom: auto;
+                display: block;
+                margin-top: 15px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 18px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .search-form {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            IT Help Desk
+        </div>
+
+        <div class="nav-title">
+            Navigation
+        </div>
+
+        <a href="/dashboard" class="nav-link">
+            Dashboard
+        </a>
+
+        <a href="/" class="nav-link">
+            Create Ticket
+        </a>
+
+        <a href="/logout" class="logout">
+            Logout
+        </a>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <h1>Technician Dashboard</h1>
+            </div>
+
+            <div class="user">
+                Logged in as Technician
+            </div>
+        </div>
+
+        <div class="stats">
+
+            <div class="stat-card">
+                <div class="stat-label">Total Tickets</div>
+                <div class="stat-number">{{ total_tickets }}</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Open</div>
+                <div class="stat-number">{{ open_tickets }}</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">In Progress</div>
+                <div class="stat-number">{{ in_progress_tickets }}</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Resolved</div>
+                <div class="stat-number">{{ resolved_tickets }}</div>
+            </div>
+
+        </div>
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <h2>Support Tickets</h2>
+
+                <form method="GET" action="/dashboard" class="search-form">
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="search-input"
+                        placeholder="Search tickets..."
+                        value="{{ search }}"
+                    >
+
+                    <button type="submit" class="search-button">
+                        Search
+                    </button>
+
+                    {% if search %}
+                        <a href="/dashboard" class="clear-button">
+                            Clear
+                        </a>
+                    {% endif %}
+
+                </form>
+
+                <a href="/" class="create-button">
+                    Create Ticket
+                </a>
+
+            </div>
+
+            {% if search %}
+                <div style="padding: 15px 20px; color: #666; font-size: 13px;">
+                    Search results for: <strong>{{ search }}</strong>
+                </div>
+            {% endif %}
+
+            <div class="table-container">
+
+                {% if tickets %}
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Ticket</th>
+                            <th>Requester</th>
+                            <th>Subject</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for ticket in tickets %}
+
+                        <tr>
+
+                            <td>
+                                <a
+                                    href="/ticket/{{ ticket['id'] }}"
+                                    class="ticket-link"
+                                >
+                                    #{{ ticket['id'] }}
+                                </a>
+                            </td>
+
+                            <td>
+                                {{ ticket['name'] }}
+                            </td>
+
+                            <td>
+                                {{ ticket['subject'] }}
+                            </td>
+
+                            <td>
+
+                                {% if ticket['priority'] == 'Low' %}
+                                    <span class="badge priority-low">
+                                        Low
+                                    </span>
+
+                                {% elif ticket['priority'] == 'Medium' %}
+                                    <span class="badge priority-medium">
+                                        Medium
+                                    </span>
+
+                                {% elif ticket['priority'] == 'High' %}
+                                    <span class="badge priority-high">
+                                        High
+                                    </span>
+
+                                {% else %}
+                                    <span class="badge priority-critical">
+                                        Critical
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if ticket['status'] == 'Open' %}
+
+                                    <span class="badge status-open">
+                                        Open
+                                    </span>
+
+                                {% elif ticket['status'] == 'In Progress' %}
+
+                                    <span class="badge status-progress">
+                                        In Progress
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge status-resolved">
+                                        Resolved
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                {% else %}
+
+                    <div class="empty">
+                        No tickets found.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

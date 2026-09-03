@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>IT Help Desk</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f5f7;
+            color: #252525;
+        }
+
+        .header {
+            background: #252a31;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .technician-link {
+            color: #d7d9dc;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .technician-link:hover {
+            color: white;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .intro {
+            margin-bottom: 25px;
+        }
+
+        .intro h1 {
+            font-size: 28px;
+            color: #252a31;
+            margin-bottom: 8px;
+        }
+
+        .intro p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .form-card {
+            background: white;
+            border: 1px solid #dedfe1;
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        .form-title {
+            font-size: 19px;
+            color: #252a31;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .error-box {
+            background: #f7e8e8;
+            border: 1px solid #dfc2c2;
+            color: #7a3b3b;
+            border-radius: 6px;
+            padding: 15px 18px;
+            margin-bottom: 22px;
+        }
+
+        .error-box strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .error-box ul {
+            padding-left: 20px;
+        }
+
+        .error-box li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cfd3d8;
+            border-radius: 5px;
+            background: white;
+            color: #252525;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #707780;
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .help-text {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .submit-area {
+            border-top: 1px solid #e5e5e5;
+            padding-top: 20px;
+            margin-top: 5px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        button {
+            padding: 12px 22px;
+            background: #343a40;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #20252a;
+        }
+
+        .footer {
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 650px) {
+            .header {
+                padding: 16px 20px;
+            }
+
+            .container {
+                margin: 30px auto;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-card {
+                padding: 22px;
+            }
+
+            .intro h1 {
+                font-size: 24px;
+            }
+
+            .submit-area {
+                justify-content: stretch;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div class="brand">
+            IT Help Desk
+        </div>
+
+        <a href="/login" class="technician-link">
+            Technician Login
+        </a>
+
+    </header>
+
+    <main class="container">
+
+        <div class="intro">
+
+            <h1>Submit a Support Request</h1>
+
+            <p>
+                Complete the form below to report an IT problem or request
+                technical assistance.
+            </p>
+
+        </div>
+
+        <div class="form-card">
+
+            <div class="form-title">
+                Support Ticket Details
+            </div>
+
+            {% if errors %}
+
+            <div class="error-box">
+
+                <strong>Please correct the following:</strong>
+
+                <ul>
+                    {% for error in errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+
+            {% endif %}
+
+            <form method="POST" action="/create-ticket">
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="name">
+                            Your Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Enter your full name"
+                            value="{{ form.get('name', '') if form else '' }}"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email address"
+                            value="{{ form.get('email', '') if form else '' }}"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="subject">
+                        Problem / Subject
+                    </label>
+
+                    <input
+                        type="text"
+                        id="subject"
+                        name="subject"
+                        placeholder="Briefly describe the problem"
+                        value="{{ form.get('subject', '') if form else '' }}"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="description">
+                        Problem Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Provide details about the issue, including any error messages or steps that led to the problem."
+                        required
+                    >{{ form.get('description', '') if form else '' }}</textarea>
+
+                    <div class="help-text">
+                        Please provide enough information to help the technician understand the issue.
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="priority">
+                        Priority
+                    </label>
+
+                    <select
+                        id="priority"
+                        name="priority"
+                        required
+                    >
+
+                        <option value="Low"
+                            {% if form and form.get('priority') == 'Low' %}selected{% endif %}>
+                            Low - General request
+                        </option>
+
+                        <option value="Medium"
+                            {% if form and form.get('priority') == 'Medium' %}selected{% endif %}>
+                            Medium - Normal issue
+                        </option>
+
+                        <option value="High"
+                            {% if form and form.get('priority') == 'High' %}selected{% endif %}>
+                            High - Significant disruption
+                        </option>
+
+                        <option value="Critical"
+                            {% if form and form.get('priority') == 'Critical' %}selected{% endif %}>
+                            Critical - Major service interruption
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="submit-area">
+
+                    <button type="submit">
+                        Submit Support Ticket
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <div class="footer">
+            IT Help Desk System
+        </div>
+
+    </main>
+
+</body>
+</html>
