@@ -8,9 +8,12 @@ from flask import (
     jsonify
 )
 
-import sqlite3
+import os
 import re
 from datetime import date, datetime, timedelta
+
+from database import create_database
+from database_connection import get_database
 
 
 # =========================================================
@@ -19,23 +22,15 @@ from datetime import date, datetime, timedelta
 
 app = Flask(__name__)
 
-app.secret_key = "hospital-ict-support-secret-key"
+secret_key = os.environ.get("SECRET_KEY")
+if os.environ.get("DATABASE_URL") and not secret_key:
+    raise RuntimeError(
+        "SECRET_KEY must be set when DATABASE_URL is configured."
+    )
 
-DATABASE_NAME = "helpdesk.db"
+app.secret_key = secret_key or "local-development-secret-key"
 
-
-# =========================================================
-# DATABASE CONNECTION
-# =========================================================
-
-def get_database():
-    connection = sqlite3.connect(DATABASE_NAME)
-
-    connection.row_factory = sqlite3.Row
-
-    connection.execute("PRAGMA foreign_keys = ON")
-
-    return connection
+create_database()
 
 
 # =========================================================
@@ -207,6 +202,8 @@ def get_technician_coverage(
     staff_id
 ):
 
+    today = date.today().isoformat()
+
     coverage = connection.execute(
         """
         SELECT coverage_area
@@ -222,21 +219,19 @@ def get_technician_coverage(
         WHERE absence.substitute_staff_id = ?
           AND absence.active = 1
           AND absent_staff.active = 1
-          AND date('now', 'localtime')
-              BETWEEN absence.start_date AND absence.end_date
+          AND ? BETWEEN absence.start_date AND absence.end_date
           AND NOT EXISTS (
               SELECT 1
               FROM staff_absences own_absence
               WHERE own_absence.staff_id = ?
                 AND own_absence.coverage_area = absence.coverage_area
                 AND own_absence.active = 1
-                AND date('now', 'localtime')
-                    BETWEEN own_absence.start_date AND own_absence.end_date
+                AND ? BETWEEN own_absence.start_date AND own_absence.end_date
           )
 
         ORDER BY coverage_area ASC
         """,
-        (staff_id, staff_id, staff_id)
+        (staff_id, staff_id, today, staff_id, today)
     ).fetchall()
 
     return [
@@ -264,6 +259,8 @@ def technician_can_access_ticket(
     # Otherwise, they can access tickets from
     # their assigned coverage areas.
 
+    today = date.today().isoformat()
+
     coverage = connection.execute(
         """
         SELECT 1
@@ -281,16 +278,14 @@ def technician_can_access_ticket(
           AND absence.coverage_area = ?
           AND absence.active = 1
           AND absent_staff.active = 1
-          AND date('now', 'localtime')
-              BETWEEN absence.start_date AND absence.end_date
+          AND ? BETWEEN absence.start_date AND absence.end_date
           AND NOT EXISTS (
               SELECT 1
               FROM staff_absences own_absence
               WHERE own_absence.staff_id = ?
                 AND own_absence.coverage_area = absence.coverage_area
                 AND own_absence.active = 1
-                AND date('now', 'localtime')
-                    BETWEEN own_absence.start_date AND own_absence.end_date
+                AND ? BETWEEN own_absence.start_date AND own_absence.end_date
           )
 
         LIMIT 1
@@ -300,7 +295,9 @@ def technician_can_access_ticket(
             ticket["department"],
             staff_id,
             ticket["department"],
-            staff_id
+            today,
+            staff_id,
+            today
         )
     ).fetchone()
 
@@ -569,6 +566,7 @@ def submit_ticket():
         VALUES (
             ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
         )
+        RETURNING id
         """,
         (
             name,
@@ -589,7 +587,7 @@ def submit_ticket():
     )
 
 
-    ticket_id = cursor.lastrowid
+    ticket_id = cursor.fetchone()["id"]
 
 
     # -----------------------------------------------------
@@ -2104,6 +2102,7 @@ def create_staff():
         VALUES (
             ?, ?, ?, ?, 1
         )
+        RETURNING id
         """,
         (
             name,
@@ -2113,6 +2112,7 @@ def create_staff():
         )
     )
 
+    created_staff_id = cursor.fetchone()["id"]
 
     connection.commit()
 
@@ -2122,7 +2122,7 @@ def create_staff():
     return json_success(
         "Staff account created successfully.",
         staff={
-            "id": cursor.lastrowid,
+            "id": created_staff_id,
             "name": name,
             "username": username,
             "role": role
@@ -2276,6 +2276,7 @@ def add_coverage():
         )
 
         VALUES (?, ?)
+        RETURNING id
         """,
         (
             staff_id,
@@ -2283,6 +2284,7 @@ def add_coverage():
         )
     )
 
+    coverage_id = cursor.fetchone()["id"]
 
     connection.commit()
 
@@ -2292,7 +2294,7 @@ def add_coverage():
     return json_success(
         "Coverage area added successfully.",
         coverage={
-            "id": cursor.lastrowid,
+            "id": coverage_id,
             "staff_id": staff_id,
             "coverage_area": coverage_area
         }
@@ -2561,6 +2563,7 @@ def add_staff_absence():
             created_at
         )
         VALUES (?, ?, ?, ?, ?, ?, 1, ?)
+        RETURNING id
         """,
         (
             absent_staff_id,
@@ -2572,6 +2575,8 @@ def add_staff_absence():
             current_time()
         )
     )
+
+    absence_id = cursor.fetchone()["id"]
 
     connection.commit()
     connection.close()
@@ -2587,7 +2592,7 @@ def add_staff_absence():
     return json_success(
         "Staff availability updated successfully.",
         availability={
-            "id": cursor.lastrowid,
+            "id": absence_id,
             "staff_id": absent_staff_id,
             "staff_name": absent_staff["name"],
             "coverage_area": coverage_area,
@@ -2721,10 +2726,12 @@ def add_section():
         )
 
         VALUES (?, 1)
+        RETURNING id
         """,
         (name,)
     )
 
+    section_id = cursor.fetchone()["id"]
 
     connection.commit()
 
@@ -2734,7 +2741,7 @@ def add_section():
     return json_success(
         "Hospital section added successfully.",
         section={
-            "id": cursor.lastrowid,
+            "id": section_id,
             "name": name,
             "active": True
         }

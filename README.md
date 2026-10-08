@@ -28,7 +28,7 @@ The system includes a responsive interface, an original locally served SVG ident
 - Admin-managed absences and temporary work-area cover
 - Form validation
 - Responsive user interface
-- SQLite database storage
+- PostgreSQL storage in deployment, with SQLite for local development
 
 ## Ticket Workflow
 
@@ -70,6 +70,25 @@ tickets are not deleted or silently reassigned.
 3. Start the application with `python app.py` and open `http://127.0.0.1:5000`.
 
 The database setup preserves existing ticket and history records while adding any fields required by the current application.
+When `DATABASE_URL` is not set, the app continues to use `helpdesk.db` for local
+Windows development. The schema is initialized automatically when the Flask app
+starts.
+
+## Deploy to Render
+
+Create a PostgreSQL database on Render and set the web service's `DATABASE_URL`
+to its internal connection URL. Also set `SECRET_KEY` to a long, random secret
+value. The application initializes its PostgreSQL schema when Gunicorn imports
+`app:app`. Gunicorn reads `gunicorn.conf.py` to bind on `0.0.0.0` and Render's
+`PORT` (defaulting to `10000` outside Render).
+
+- Build command: `pip install -r requirements.txt`
+- Start command: `gunicorn app:app`
+
+The PostgreSQL database uses the same application tables and relationships as
+the SQLite database. Existing data in a local `helpdesk.db` is not copied to
+Render automatically; import it into PostgreSQL separately before directing
+users to the deployed service.
 
 ## Project Structure
 
@@ -78,6 +97,8 @@ IT-helpdesk-system/
 │
 ├── app.py
 ├── database.py
+├── database_connection.py
+├── gunicorn.conf.py
 ├── requirements.txt
 ├── README.md
 ├── .gitignore

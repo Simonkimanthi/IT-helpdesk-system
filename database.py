@@ -1,21 +1,29 @@
-import sqlite3
-
-
-DATABASE_NAME = "helpdesk.db"
-
-
-def get_database():
-    connection = sqlite3.connect(DATABASE_NAME)
-    connection.row_factory = sqlite3.Row
-    return connection
+from database_connection import get_database
 
 
 def add_column_if_missing(connection, table, column, definition):
-    columns = connection.execute(
-        f"PRAGMA table_info({table})"
-    ).fetchall()
-
-    column_names = [column_info[1] for column_info in columns]
+    if connection.is_postgres:
+        columns = connection.execute(
+            """
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_schema = current_schema()
+              AND table_name = ?
+            """,
+            (table,)
+        ).fetchall()
+        column_names = {
+            column["column_name"]
+            for column in columns
+        }
+    else:
+        columns = connection.execute(
+            f"PRAGMA table_info({table})"
+        ).fetchall()
+        column_names = {
+            column["name"]
+            for column in columns
+        }
 
     if column not in column_names:
         connection.execute(
@@ -25,13 +33,18 @@ def add_column_if_missing(connection, table, column, definition):
 
 def create_database():
     connection = get_database()
+    primary_key = (
+        "SERIAL PRIMARY KEY"
+        if connection.is_postgres
+        else "INTEGER PRIMARY KEY AUTOINCREMENT"
+    )
 
     # -------------------------------------------------
     # Tickets table
     # -------------------------------------------------
-    connection.execute("""
+    connection.execute(f"""
         CREATE TABLE IF NOT EXISTS tickets (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id {primary_key},
             name TEXT NOT NULL,
             email TEXT NOT NULL,
             subject TEXT NOT NULL,
@@ -111,9 +124,9 @@ def create_database():
     # -------------------------------------------------
     # ICT staff accounts
     # -------------------------------------------------
-    connection.execute("""
+    connection.execute(f"""
         CREATE TABLE IF NOT EXISTS ict_staff (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id {primary_key},
             name TEXT NOT NULL,
             username TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
@@ -125,9 +138,9 @@ def create_database():
     # -------------------------------------------------
     # ICT staff coverage areas
     # -------------------------------------------------
-    connection.execute("""
+    connection.execute(f"""
         CREATE TABLE IF NOT EXISTS staff_coverage (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id {primary_key},
             staff_id INTEGER NOT NULL,
             coverage_area TEXT NOT NULL,
             FOREIGN KEY (staff_id) REFERENCES ict_staff(id)
@@ -137,9 +150,9 @@ def create_database():
     # -------------------------------------------------
     # Staff absences and temporary coverage handovers
     # -------------------------------------------------
-    connection.execute("""
+    connection.execute(f"""
         CREATE TABLE IF NOT EXISTS staff_absences (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id {primary_key},
             staff_id INTEGER NOT NULL,
             coverage_area TEXT NOT NULL,
             substitute_staff_id INTEGER,
@@ -161,9 +174,9 @@ def create_database():
     # -------------------------------------------------
     # Hospital work areas / sections
     # -------------------------------------------------
-    connection.execute("""
+    connection.execute(f"""
         CREATE TABLE IF NOT EXISTS hospital_sections (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id {primary_key},
             name TEXT NOT NULL UNIQUE,
             active INTEGER NOT NULL DEFAULT 1
         )
@@ -235,9 +248,9 @@ def create_database():
     # -------------------------------------------------
     # Ticket history
     # -------------------------------------------------
-    connection.execute("""
+    connection.execute(f"""
         CREATE TABLE IF NOT EXISTS ticket_history (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id {primary_key},
             ticket_id INTEGER NOT NULL,
             staff_id INTEGER,
             action TEXT NOT NULL,
