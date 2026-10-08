@@ -1,0 +1,2564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Staff &amp; coverage | ICT Service Desk</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        .topbar {
+            background: #123b5d;
+            color: white;
+            padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .topbar p {
+            margin: 5px 0 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .topbar-actions a {
+            color: white;
+            text-decoration: none;
+            padding: 9px 14px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.12);
+            font-size: 14px;
+        }
+
+        .topbar-actions a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #123b5d;
+        }
+
+        .section-header p {
+            margin: 5px 0 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 7px;
+            color: #374151;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #123b5d;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0e2f49;
+        }
+
+        .btn-success {
+            background: #15803d;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #166534;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-warning {
+            background: #d97706;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #b45309;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .btn-small {
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th,
+        td {
+            padding: 13px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #374151;
+            font-size: 13px;
+        }
+
+        tr:hover td {
+            background: #fafafa;
+        }
+
+        .staff-name {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .username {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .role-badge,
+        .status-badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .role-admin {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .role-technician {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .coverage-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 10px;
+        }
+
+        .coverage-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 9px;
+            background: #eef2ff;
+            color: #3730a3;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .coverage-remove {
+            border: none;
+            background: transparent;
+            color: #dc2626;
+            padding: 0;
+            font-size: 15px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .coverage-form {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+        }
+
+        .coverage-form select {
+            min-width: 190px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .message {
+            display: none;
+            padding: 11px 14px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .message.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .message.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .empty-state {
+            padding: 25px;
+            text-align: center;
+            color: #6b7280;
+            background: #f9fafb;
+            border-radius: 7px;
+        }
+
+        .section-row-actions {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .section-name {
+            font-weight: 600;
+        }
+
+        .section-inactive {
+            opacity: 0.55;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .inline-form {
+            display: inline;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .add-section-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .add-section-form input {
+            flex: 1;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        @media (max-width: 800px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .coverage-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .coverage-form select {
+                min-width: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 12px;
+                margin: 20px auto;
+            }
+
+            .section {
+                padding: 17px;
+            }
+
+            .add-section-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div class="staff-page-heading">
+            <img
+                class="brand-mark"
+                src="{{ url_for('static', filename='img/it-support-mark.svg') }}"
+                alt=""
+                width="42"
+                height="42"
+            >
+            <div>
+                <p class="brand-eyebrow">ICT SERVICE DESK</p>
+                <h1>Staff &amp; coverage</h1>
+                <p>Manage technician accounts, service-area coverage and request locations.</p>
+            </div>
+        </div>
+
+        <div class="topbar-actions">
+            <a href="{{ url_for('admin_home') }}">Admin Dashboard</a>
+            <a href="{{ url_for('dashboard') }}">Tickets</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div id="messageBox" class="message" role="status" aria-live="polite"></div>
+
+        <!-- CREATE ICT STAFF ACCOUNT -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h2>Create ICT Staff Account</h2>
+                    <p>Create an administrator or technician account.</p>
+                </div>
+            </div>
+
+            <form
+                id="createStaffForm"
+                method="POST"
+                action="{{ url_for('create_staff') }}"
+            >
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Enter full name"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter username"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter password"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <select
+                            id="role"
+                            name="role"
+                            required
+                        >
+                            <option value="technician">Technician</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full">
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                        >
+                            Create Staff Account
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+
+        <!-- ICT STAFF ACCOUNTS -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h2>ICT Staff Accounts</h2>
+                    <p>
+                        Manage staff accounts and assign one or more hospital work areas to technicians.
+                    </p>
+                </div>
+            </div>
+
+            <div
+                id="staffTableWrapper"
+                class="table-wrapper"
+                {% if not staff_members %}hidden{% endif %}
+            >
+                <table id="staffTable">
+                    <thead>
+                        <tr>
+                            <th>Staff Member</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Work Area Coverage</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for member in staff_members %}
+
+                        <tr
+                            data-staff-id="{{ member['id'] }}"
+                            data-staff-name="{{ member['name'] }}"
+                        >
+
+                            <td>
+                                <div class="staff-name">
+                                    {{ member['name'] }}
+                                </div>
+
+                                <div class="username">
+                                    @{{ member['username'] }}
+                                </div>
+                            </td>
+
+                            <td>
+                                {% if member['role'] == 'admin' %}
+                                    <span class="role-badge role-admin">
+                                        Administrator
+                                    </span>
+                                {% else %}
+                                    <span class="role-badge role-technician">
+                                        Technician
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if member['active'] %}
+                                    <span class="status-badge status-active">
+                                        Active
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-inactive">
+                                        Inactive
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+
+                                {% if member['role'] == 'technician' %}
+
+                                    <div
+                                        class="coverage-list"
+                                        id="coverage-list-{{ member['id'] }}"
+                                    >
+
+                                        {% for coverage_item in coverage %}
+
+                                            {% if coverage_item['staff_id'] == member['id'] %}
+
+                                                <span
+                                                    class="coverage-tag"
+                                                    data-coverage-id="{{ coverage_item['id'] }}"
+                                                >
+                                                    <span>
+                                                        {{ coverage_item['coverage_area'] }}
+                                                    </span>
+
+                                                    <button
+                                                        type="button"
+                                                        class="coverage-remove"
+                                                        onclick="removeCoverage({{ coverage_item['id'] }})"
+                                                        title="Remove coverage"
+                                                        aria-label="Remove {{ coverage_item['coverage_area'] }} coverage"
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </span>
+
+                                            {% endif %}
+
+                                        {% endfor %}
+
+                                    </div>
+
+                                    <form
+                                        class="coverage-form ajax-form"
+                                        method="POST"
+                                        action="{{ url_for('add_coverage') }}"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="staff_id"
+                                            value="{{ member['id'] }}"
+                                        >
+
+                                        <select
+                                            name="coverage_area"
+                                            class="coverage-select"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select work area
+                                            </option>
+
+                                            {% for section in sections %}
+
+                                                {% if section['active'] %}
+
+                                                    <option value="{{ section['name'] }}">
+                                                        {{ section['name'] }}
+                                                    </option>
+
+                                                {% endif %}
+
+                                            {% endfor %}
+
+                                        </select>
+
+                                        <button
+                                            type="submit"
+                                            class="btn-primary btn-small"
+                                        >
+                                            Assign
+                                        </button>
+
+                                    </form>
+
+                                {% else %}
+
+                                    <span class="help-text">
+                                        Administrators do not require coverage assignment.
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                <div class="actions">
+
+                                    {% if member['id'] != staff['id'] %}
+
+                                        {% if member['active'] %}
+
+                                            <button
+                                                type="button"
+                                                class="btn-warning btn-small ajax-action"
+                                                data-url="{{ url_for('deactivate_staff', staff_id=member['id']) }}"
+                                            >
+                                                Deactivate
+                                            </button>
+
+                                        {% else %}
+
+                                            <button
+                                                type="button"
+                                                class="btn-success btn-small ajax-action"
+                                                data-url="{{ url_for('activate_staff', staff_id=member['id']) }}"
+                                            >
+                                                Activate
+                                            </button>
+
+                                        {% endif %}
+
+                                        <button
+                                            type="button"
+                                            class="btn-danger btn-small ajax-action"
+                                            data-url="{{ url_for('delete_staff', staff_id=member['id']) }}"
+                                            data-confirm="Delete this staff account?"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    {% else %}
+
+                                        <span class="help-text">
+                                            Current account
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+            </div>
+
+            <div
+                id="staffEmptyState"
+                class="empty-state"
+                {% if staff_members %}hidden{% endif %}
+            >
+                No ICT staff accounts have been created yet.
+            </div>
+
+        </div>
+
+
+        <!-- STAFF AVAILABILITY AND TEMPORARY COVERAGE -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h2>Staff Availability &amp; Cover</h2>
+                    <p>
+                        Record planned days off or leave and decide who covers each assigned work area.
+                        Past records remain available for reference.
+                    </p>
+                </div>
+            </div>
+
+            <form
+                id="availabilityForm"
+                class="availability-form"
+                method="POST"
+                action="{{ url_for('add_staff_absence') }}"
+            >
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="absenceStaff">Technician</label>
+                        <select
+                            id="absenceStaff"
+                            name="staff_id"
+                            required
+                        >
+                            <option value="">Select technician</option>
+                            {% for member in technicians %}
+                                <option value="{{ member['id'] }}">{{ member['name'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="absenceArea">Covered work area</label>
+                        <select
+                            id="absenceArea"
+                            name="coverage_area"
+                            required
+                            disabled
+                        >
+                            <option value="">Select a technician first</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="absenceSubstitute">Replacement technician</label>
+                        <select
+                            id="absenceSubstitute"
+                            name="substitute_staff_id"
+                        >
+                            <option value="">Auto-select an available technician</option>
+                            {% for member in technicians %}
+                                <option value="{{ member['id'] }}">{{ member['name'] }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="help-text">
+                            Choose a specific replacement, or let the system route to another available technician assigned to this area.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="absenceReason">Reason (optional)</label>
+                        <input
+                            type="text"
+                            id="absenceReason"
+                            name="reason"
+                            maxlength="200"
+                            placeholder="e.g. Annual leave, scheduled day off"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="absenceStartDate">First day away</label>
+                        <input
+                            type="date"
+                            id="absenceStartDate"
+                            name="start_date"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="absenceEndDate">Last day away</label>
+                        <input
+                            type="date"
+                            id="absenceEndDate"
+                            name="end_date"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group full">
+                        <button type="submit" class="btn-primary">
+                            Save Availability &amp; Cover
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <p class="help-text">
+                Add one record for each affected work area. Only new requests are automatically routed to the cover technician;
+                existing tickets remain in their history and can still be reassigned from the ticket.
+            </p>
+
+            <div
+                id="availabilityTableWrapper"
+                class="table-wrapper"
+                {% if not availability %}hidden{% endif %}
+            >
+                <table id="availabilityTable">
+                    <thead>
+                        <tr>
+                            <th>Technician</th>
+                            <th>Work Area</th>
+                            <th>Cover</th>
+                            <th>Dates</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in availability %}
+                            <tr data-availability-id="{{ item['id'] }}">
+                                <td class="availability-staff">{{ item['staff_name'] }}</td>
+                                <td class="availability-area">{{ item['coverage_area'] }}</td>
+                                <td class="availability-substitute">
+                                    {{ item['substitute_name'] or 'Auto-select available technician' }}
+                                </td>
+                                <td>
+                                    {{ item['start_date'] }} – {{ item['end_date'] }}
+                                </td>
+                                <td class="availability-reason">{{ item['reason'] or '—' }}</td>
+                                <td>
+                                    <span class="status-badge availability-status {% if item['status'] in ('Scheduled', 'On leave today') %}status-active{% else %}status-inactive{% endif %}">
+                                        {{ item['status'] }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if item['active'] and item['status'] in ('Scheduled', 'On leave today') %}
+                                        <button
+                                            type="button"
+                                            class="btn-secondary btn-small ajax-action cancel-availability"
+                                            data-availability-id="{{ item['id'] }}"
+                                            data-url="{{ url_for('cancel_staff_absence', absence_id=item['id']) }}"
+                                            data-confirm="Cancel this availability and cover schedule?"
+                                        >
+                                            Cancel schedule
+                                        </button>
+                                    {% else %}
+                                        <span class="help-text">Record retained</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div
+                id="availabilityEmptyState"
+                class="empty-state"
+                {% if availability %}hidden{% endif %}
+            >
+                No staff availability or cover schedules have been recorded.
+            </div>
+        </div>
+
+
+        <!-- HOSPITAL WORK AREAS -->
+        <div class="section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Hospital Work Areas / Sections</h2>
+                    <p>
+                        Manage the hospital areas that staff can select when submitting ICT support requests.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- ADD SECTION -->
+            <form
+                id="addSectionForm"
+                class="add-section-form"
+                method="POST"
+                action="{{ url_for('add_section') }}"
+            >
+
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter new hospital work area"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    Add Work Area
+                </button>
+
+            </form>
+
+
+                <div
+                    id="sectionsTableWrapper"
+                    class="table-wrapper"
+                    {% if not sections %}hidden{% endif %}
+                >
+
+                    <table id="sectionsTable">
+
+                        <thead>
+                            <tr>
+                                <th>Work Area / Section</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for section in sections %}
+
+                                <tr
+                                    data-section-id="{{ section['id'] }}"
+                                    class="{% if not section['active'] %}section-inactive{% endif %}"
+                                >
+
+                                    <td>
+                                        <span class="section-name">
+                                            {{ section['name'] }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+
+                                        {% if section['active'] %}
+
+                                            <span class="status-badge status-active">
+                                                Active
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="status-badge status-inactive">
+                                                Inactive
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="section-row-actions">
+
+                                            <button
+                                                type="button"
+                                                class="btn-secondary btn-small edit-section-button"
+                                                data-section-id="{{ section['id'] }}"
+                                                data-section-name="{{ section['name'] }}"
+                                            >
+                                                Edit
+                                            </button>
+
+
+                                            {% if section['active'] %}
+
+                                                <button
+                                                    type="button"
+                                                    class="btn-warning btn-small ajax-action"
+                                                    data-url="{{ url_for('deactivate_section', section_id=section['id']) }}"
+                                                >
+                                                    Deactivate
+                                                </button>
+
+                                            {% else %}
+
+                                                <button
+                                                    type="button"
+                                                    class="btn-success btn-small ajax-action"
+                                                    data-url="{{ url_for('activate_section', section_id=section['id']) }}"
+                                                >
+                                                    Activate
+                                                </button>
+
+                                            {% endif %}
+
+
+                                            <button
+                                                type="button"
+                                                class="btn-danger btn-small ajax-action"
+                                                data-url="{{ url_for('delete_section', section_id=section['id']) }}"
+                                                data-confirm="Delete this hospital work area?"
+                                            >
+                                                Delete
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div
+                    id="sectionsEmptyState"
+                    class="empty-state"
+                    {% if sections %}hidden{% endif %}
+                >
+                    No hospital work areas have been configured.
+                </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const technicianCoverage =
+            {{ technician_coverage|tojson }};
+
+
+        /*
+         * Show a non-blocking confirmation without moving the page.
+         */
+        function showMessage(message, type = "success") {
+
+            const messageBox =
+                document.getElementById("messageBox");
+
+            messageBox.textContent = message;
+
+            messageBox.className =
+                "message " + type;
+
+            setTimeout(() => {
+
+                messageBox.className = "message";
+
+            }, 5000);
+        }
+
+
+        /*
+         * Safely parse JSON response.
+         */
+        async function parseResponse(response) {
+
+            const contentType =
+                response.headers.get("content-type") || "";
+
+            if (contentType.includes("application/json")) {
+
+                return await response.json();
+
+            }
+
+            const text =
+                await response.text();
+
+            return {
+                success: response.ok,
+                message: text
+            };
+        }
+
+
+        /*
+         * Send an AJAX form.
+         */
+        async function sendAjaxForm(form) {
+
+            form.classList.add("loading");
+
+            try {
+
+                const response =
+                    await fetch(
+                        form.action,
+                        {
+                            method: "POST",
+                            body: new FormData(form),
+                            headers: {
+                                "X-Requested-With": "XMLHttpRequest"
+                            }
+                        }
+                    );
+
+                const data =
+                    await parseResponse(response);
+
+                if (!response.ok || data.success === false) {
+
+                    throw new Error(
+                        data.message ||
+                        "The request could not be completed."
+                    );
+
+                }
+
+                handleAjaxSuccess(
+                    form,
+                    data
+                );
+
+            } catch (error) {
+
+                showMessage(
+                    error.message ||
+                    "An unexpected error occurred.",
+                    "error"
+                );
+
+            } finally {
+
+                form.classList.remove("loading");
+
+            }
+        }
+
+
+        /*
+         * Handle successful AJAX operations.
+         */
+        function handleAjaxSuccess(form, data) {
+
+            const action =
+                form.getAttribute("action") || "";
+
+            if (
+                action.includes("/admin/availability/add") &&
+                data.availability
+            ) {
+
+                addAvailabilityRow(data.availability);
+                form.reset();
+                updateAvailabilityAreas();
+                showMessage(data.message);
+                return;
+            }
+
+
+            /*
+             * Staff creation.
+             */
+            if (
+                action.includes("/admin/staff/create")
+            ) {
+
+                if (data.staff) {
+
+                    addStaffRow(
+                        data.staff
+                    );
+
+                    form.reset();
+
+                    showMessage(
+                        "ICT staff account created successfully."
+                    );
+
+                } else {
+
+                    location.reload();
+
+                }
+
+                return;
+            }
+
+
+            /*
+             * Coverage creation.
+             */
+            if (
+                action.includes("/admin/coverage/add")
+            ) {
+
+                if (data.coverage) {
+
+                    const coverage =
+                        data.coverage;
+
+                    const list =
+                        document.getElementById(
+                            "coverage-list-" +
+                            coverage.staff_id
+                        );
+
+                    if (list) {
+
+                        /*
+                         * Do not visually add a duplicate
+                         * when the backend reports that
+                         * the coverage already existed.
+                         */
+                        if (!data.existing) {
+
+                            list.appendChild(
+                                createCoverageTag(
+                                    coverage
+                                )
+                            );
+
+                        }
+
+                    }
+
+                    const staffKey =
+                        String(coverage.staff_id);
+                    const areas =
+                        technicianCoverage[staffKey] || [];
+                    if (
+                        !data.existing &&
+                        !areas.includes(coverage.coverage_area)
+                    ) {
+                        areas.push(coverage.coverage_area);
+                        technicianCoverage[staffKey] = areas;
+                    }
+
+                    form.reset();
+                    updateAvailabilityAreas();
+
+                    if (data.existing) {
+
+                        showMessage(
+                            "That work area is already assigned to this technician."
+                        );
+
+                    } else {
+
+                        showMessage(
+                            "Work area coverage added successfully."
+                        );
+
+                    }
+
+                }
+
+                return;
+            }
+
+
+            /*
+             * Add hospital section.
+             */
+            if (
+                action.includes("/admin/sections/add")
+            ) {
+
+                if (data.section) {
+
+                    addSectionRow(
+                        data.section
+                    );
+
+                    form.reset();
+
+                    updateCoverageSelects();
+
+                    showMessage(
+                        "Hospital work area added successfully."
+                    );
+
+                } else {
+
+                    location.reload();
+
+                }
+
+                return;
+            }
+
+
+            /*
+             * Other successful operations.
+             */
+            showMessage(
+                data.message ||
+                "Operation completed successfully."
+            );
+
+            setTimeout(() => {
+
+                location.reload();
+
+            }, 800);
+        }
+
+
+        /*
+         * Create a coverage tag.
+         */
+        function createCoverageTag(coverage) {
+
+            const tag =
+                document.createElement("span");
+
+            tag.className =
+                "coverage-tag";
+
+            tag.dataset.coverageId =
+                coverage.id;
+
+
+            const text =
+                document.createElement("span");
+
+            text.textContent =
+                coverage.coverage_area;
+
+
+            const removeButton =
+                document.createElement("button");
+
+            removeButton.type =
+                "button";
+
+            removeButton.className =
+                "coverage-remove";
+
+            removeButton.textContent =
+                "Remove";
+
+            removeButton.title =
+                "Remove coverage";
+
+            removeButton.onclick =
+                function () {
+
+                    removeCoverage(
+                        coverage.id
+                    );
+
+                };
+
+
+            tag.appendChild(text);
+
+            tag.appendChild(removeButton);
+
+            return tag;
+        }
+
+        function updateAvailabilityAreas() {
+
+            const staffSelect =
+                document.getElementById("absenceStaff");
+            const areaSelect =
+                document.getElementById("absenceArea");
+            const substituteSelect =
+                document.getElementById("absenceSubstitute");
+            const staffId =
+                staffSelect.value;
+            const areas =
+                technicianCoverage[staffId] || [];
+
+            areaSelect.replaceChildren();
+
+            const placeholder =
+                document.createElement("option");
+            placeholder.value = "";
+            placeholder.textContent = areas.length
+                ? "Select work area"
+                : "No active coverage assigned";
+            areaSelect.appendChild(placeholder);
+
+            areas.forEach(function(area) {
+                const option =
+                    document.createElement("option");
+                option.value = area;
+                option.textContent = area;
+                areaSelect.appendChild(option);
+            });
+
+            areaSelect.disabled = areas.length === 0;
+
+            Array.from(substituteSelect.options).forEach(
+                function(option) {
+                    option.disabled =
+                        Boolean(staffId) &&
+                        option.value === staffId;
+                }
+            );
+
+            if (substituteSelect.value === staffId) {
+                substituteSelect.value = "";
+            }
+        }
+
+
+        function addAvailabilityRow(availability) {
+
+            const tbody =
+                document.querySelector(
+                    "#availabilityTable tbody"
+                );
+            const row =
+                document.createElement("tr");
+            row.dataset.availabilityId =
+                availability.id;
+
+            [
+                availability.staff_name,
+                availability.coverage_area,
+                availability.substitute_name ||
+                    "Auto-select available technician",
+                availability.start_date +
+                    " – " +
+                    availability.end_date,
+                availability.reason || "—"
+            ].forEach(function(value, index) {
+                const cell =
+                    document.createElement("td");
+                cell.textContent = value;
+                if (index === 0) {
+                    cell.className = "availability-staff";
+                } else if (index === 1) {
+                    cell.className = "availability-area";
+                } else if (index === 2) {
+                    cell.className = "availability-substitute";
+                } else if (index === 4) {
+                    cell.className = "availability-reason";
+                }
+                row.appendChild(cell);
+            });
+
+            const statusCell =
+                document.createElement("td");
+            const statusBadge =
+                document.createElement("span");
+            statusBadge.className =
+                "status-badge availability-status " +
+                (
+                    availability.status === "Ended"
+                        ? "status-inactive"
+                        : "status-active"
+                );
+            statusBadge.textContent = availability.status;
+            statusCell.appendChild(statusBadge);
+            row.appendChild(statusCell);
+
+            const actionsCell =
+                document.createElement("td");
+            if (
+                availability.status === "Scheduled" ||
+                availability.status === "On leave today"
+            ) {
+                const cancelButton =
+                    document.createElement("button");
+                cancelButton.type = "button";
+                cancelButton.className =
+                    "btn-secondary btn-small ajax-action cancel-availability";
+                cancelButton.dataset.availabilityId =
+                    availability.id;
+                cancelButton.dataset.url =
+                    "/admin/availability/" +
+                    availability.id +
+                    "/cancel";
+                cancelButton.dataset.confirm =
+                    "Cancel this availability and cover schedule?";
+                cancelButton.textContent = "Cancel schedule";
+                actionsCell.appendChild(cancelButton);
+            } else {
+                const retained =
+                    document.createElement("span");
+                retained.className = "help-text";
+                retained.textContent = "Record retained";
+                actionsCell.appendChild(retained);
+            }
+            row.appendChild(actionsCell);
+
+            tbody.prepend(row);
+            document.getElementById(
+                "availabilityTableWrapper"
+            ).hidden = false;
+            document.getElementById(
+                "availabilityEmptyState"
+            ).hidden = true;
+            attachAjaxActions(row);
+        }
+
+
+        /*
+         * Remove technician coverage.
+         */
+        async function removeCoverage(
+            coverageId
+        ) {
+
+            if (
+                !confirm(
+                    "Remove this work area from the technician?"
+                )
+            ) {
+
+                return;
+
+            }
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/admin/coverage/" +
+                        coverageId +
+                        "/delete",
+                        {
+                            method: "POST",
+                            headers: {
+                                "X-Requested-With":
+                                    "XMLHttpRequest"
+                            }
+                        }
+                    );
+
+                const data =
+                    await parseResponse(response);
+
+                if (
+                    !response.ok ||
+                    data.success === false
+                ) {
+
+                    throw new Error(
+                        data.message ||
+                        "Could not remove coverage."
+                    );
+
+                }
+
+
+                const tag =
+                    document.querySelector(
+                        '[data-coverage-id="' +
+                        coverageId +
+                        '"]'
+                    );
+
+                if (tag) {
+                    const list =
+                        tag.parentElement;
+                    const staffId =
+                        list.id.replace("coverage-list-", "");
+                    const area =
+                        tag.querySelector("span").textContent.trim();
+                    tag.remove();
+
+                    const areas =
+                        technicianCoverage[staffId] || [];
+                    if (
+                        !Array.from(list.children).some(
+                            (remainingTag) =>
+                                remainingTag.querySelector("span")
+                                    .textContent.trim() === area
+                        )
+                    ) {
+                        technicianCoverage[staffId] =
+                            areas.filter(
+                                (assignedArea) =>
+                                    assignedArea !== area
+                            );
+                    }
+                    updateAvailabilityAreas();
+                }
+
+                showMessage(
+                    "Work area coverage removed successfully."
+                );
+
+            } catch (error) {
+
+                showMessage(
+                    error.message ||
+                    "Could not remove coverage.",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /*
+         * Add a new staff row to the table.
+         */
+        function addStaffRow(staff) {
+
+            const table =
+                document.getElementById(
+                    "staffTable"
+                );
+
+            const tbody =
+                table.querySelector("tbody");
+
+
+            const row =
+                document.createElement("tr");
+
+            row.dataset.staffId =
+                staff.id;
+
+            row.dataset.staffName =
+                staff.name;
+
+
+            /*
+             * Staff information.
+             */
+            const staffCell =
+                document.createElement("td");
+
+            staffCell.innerHTML = `
+                <div class="staff-name">
+                    ${escapeHtml(staff.name)}
+                </div>
+
+                <div class="username">
+                    @${escapeHtml(staff.username)}
+                </div>
+            `;
+
+
+            /*
+             * Role.
+             */
+            const roleCell =
+                document.createElement("td");
+
+            if (staff.role === "admin") {
+
+                roleCell.innerHTML = `
+                    <span class="role-badge role-admin">
+                        Administrator
+                    </span>
+                `;
+
+            } else {
+
+                roleCell.innerHTML = `
+                    <span class="role-badge role-technician">
+                        Technician
+                    </span>
+                `;
+
+            }
+
+
+            /*
+             * Status.
+             */
+            const statusCell =
+                document.createElement("td");
+
+            statusCell.innerHTML = `
+                <span class="status-badge status-active">
+                    Active
+                </span>
+            `;
+
+
+            /*
+             * Coverage.
+             */
+            const coverageCell =
+                document.createElement("td");
+
+
+            if (staff.role === "technician") {
+
+                const coverageList =
+                    document.createElement("div");
+
+                coverageList.className =
+                    "coverage-list";
+
+                coverageList.id =
+                    "coverage-list-" +
+                    staff.id;
+
+
+                const coverageForm =
+                    document.createElement("form");
+
+                coverageForm.className =
+                    "coverage-form ajax-form";
+
+                coverageForm.method =
+                    "POST";
+
+                coverageForm.action =
+                    "{{ url_for('add_coverage') }}";
+
+
+                coverageForm.innerHTML = `
+                    <input
+                        type="hidden"
+                        name="staff_id"
+                        value="${staff.id}"
+                    >
+
+                    <select
+                        name="coverage_area"
+                        class="coverage-select"
+                        required
+                    >
+                        <option value="">
+                            Select work area
+                        </option>
+                    </select>
+
+                    <button
+                        type="submit"
+                        class="btn-primary btn-small"
+                    >
+                        Assign
+                    </button>
+                `;
+
+
+                coverageCell.appendChild(
+                    coverageList
+                );
+
+                coverageCell.appendChild(
+                    coverageForm
+                );
+
+
+                attachCoverageForm(
+                    coverageForm
+                );
+
+            } else {
+
+                coverageCell.innerHTML = `
+                    <span class="help-text">
+                        Administrators do not require coverage assignment.
+                    </span>
+                `;
+
+            }
+
+
+            /*
+             * Actions.
+             */
+            const actionsCell =
+                document.createElement("td");
+
+            const actions =
+                document.createElement("div");
+
+            actions.className =
+                "actions";
+
+
+            actions.innerHTML = `
+                <button
+                    type="button"
+                    class="btn-warning btn-small ajax-action"
+                    data-url="/admin/staff/${staff.id}/deactivate"
+                >
+                    Deactivate
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-danger btn-small ajax-action"
+                    data-url="/admin/staff/${staff.id}/delete"
+                    data-confirm="Delete this staff account?"
+                >
+                    Delete
+                </button>
+            `;
+
+
+            actionsCell.appendChild(
+                actions
+            );
+
+
+            row.appendChild(
+                staffCell
+            );
+
+            row.appendChild(
+                roleCell
+            );
+
+            row.appendChild(
+                statusCell
+            );
+
+            row.appendChild(
+                coverageCell
+            );
+
+            row.appendChild(
+                actionsCell
+            );
+
+
+            tbody.prepend(row);
+
+            document.getElementById(
+                "staffTableWrapper"
+            ).hidden = false;
+
+            document.getElementById(
+                "staffEmptyState"
+            ).hidden = true;
+
+            updateCoverageSelects();
+
+            attachAjaxActions(row);
+
+        }
+
+
+        /*
+         * Add a new hospital section row.
+         */
+        function addSectionRow(section) {
+
+            const table =
+                document.getElementById(
+                    "sectionsTable"
+                );
+
+            const tbody =
+                table.querySelector("tbody");
+
+
+            const row =
+                document.createElement("tr");
+
+            row.dataset.sectionId =
+                section.id;
+
+
+            row.innerHTML = `
+                <td>
+                    <span class="section-name">
+                        ${escapeHtml(section.name)}
+                    </span>
+                </td>
+
+                <td>
+                    <span class="status-badge status-active">
+                        Active
+                    </span>
+                </td>
+
+                <td>
+                    <div class="section-row-actions">
+
+                        <button
+                            type="button"
+                            class="btn-secondary btn-small edit-section-button"
+                            data-section-id="${section.id}"
+                            data-section-name="${escapeHtml(section.name)}"
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn-warning btn-small ajax-action"
+                            data-url="/admin/sections/${section.id}/deactivate"
+                        >
+                            Deactivate
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn-danger btn-small ajax-action"
+                            data-url="/admin/sections/${section.id}/delete"
+                            data-confirm="Delete this hospital work area?"
+                        >
+                            Delete
+                        </button>
+
+                    </div>
+                </td>
+            `;
+
+
+            tbody.prepend(row);
+
+            document.getElementById(
+                "sectionsTableWrapper"
+            ).hidden = false;
+
+            document.getElementById(
+                "sectionsEmptyState"
+            ).hidden = true;
+
+            attachAjaxActions(row);
+
+            attachEditButton(row);
+
+        }
+
+
+        /*
+         * Attach the coverage form handler.
+         */
+        function attachCoverageForm(form) {
+
+            form.addEventListener(
+                "submit",
+                function (event) {
+
+                    event.preventDefault();
+
+                    sendAjaxForm(form);
+
+                }
+            );
+
+        }
+
+
+        /*
+         * Get active hospital sections
+         * directly from the section table.
+         */
+        function getActiveSections() {
+
+            const rows =
+                document.querySelectorAll(
+                    "#sectionsTable tbody tr"
+                );
+
+            const sections = [];
+
+
+            rows.forEach(
+                function (row) {
+
+                    const status =
+                        row.querySelector(
+                            ".status-badge"
+                        );
+
+                    if (
+                        status &&
+                        status.textContent.trim()
+                            .toLowerCase()
+                            === "active"
+                    ) {
+
+                        const nameElement =
+                            row.querySelector(
+                                ".section-name"
+                            );
+
+                        if (nameElement) {
+
+                            sections.push(
+                                nameElement.textContent.trim()
+                            );
+
+                        }
+
+                    }
+
+                }
+            );
+
+
+            return sections;
+
+        }
+
+
+        /*
+         * Add active sections to all
+         * technician coverage dropdowns.
+         */
+        function addActiveSectionOptions(select) {
+
+            const currentValue =
+                select.value;
+
+            const sections =
+                getActiveSections();
+
+
+            select.innerHTML = `
+                <option value="">
+                    Select work area
+                </option>
+            `;
+
+
+            sections.forEach(
+                function (section) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        section;
+
+                    option.textContent =
+                        section;
+
+                    select.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+
+            if (
+                sections.includes(
+                    currentValue
+                )
+            ) {
+
+                select.value =
+                    currentValue;
+
+            }
+
+        }
+
+
+        /*
+         * Refresh all coverage dropdowns.
+         */
+        function updateCoverageSelects() {
+
+            const selects =
+                document.querySelectorAll(
+                    ".coverage-select"
+                );
+
+            selects.forEach(
+                function (select) {
+
+                    addActiveSectionOptions(
+                        select
+                    );
+
+                }
+            );
+
+        }
+
+
+        /*
+         * Attach AJAX action buttons.
+         */
+        function attachAjaxActions(
+            container = document
+        ) {
+
+            const buttons =
+                container.querySelectorAll(
+                    ".ajax-action"
+                );
+
+
+            buttons.forEach(
+                function (button) {
+
+                    if (
+                        button.dataset.bound === "true"
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    button.dataset.bound =
+                        "true";
+
+
+                    button.addEventListener(
+                        "click",
+                        async function () {
+
+                            const confirmation =
+                                button.dataset.confirm;
+
+
+                            if (
+                                confirmation &&
+                                !confirm(
+                                    confirmation
+                                )
+                            ) {
+
+                                return;
+
+                            }
+
+
+                            button.disabled =
+                                true;
+
+
+                            try {
+
+                                const response =
+                                    await fetch(
+                                        button.dataset.url,
+                                        {
+                                            method: "POST",
+                                            headers: {
+                                                "X-Requested-With":
+                                                    "XMLHttpRequest"
+                                            }
+                                        }
+                                    );
+
+
+                                const data =
+                                    await parseResponse(
+                                        response
+                                    );
+
+
+                                if (
+                                    !response.ok ||
+                                    data.success === false
+                                ) {
+
+                                    throw new Error(
+                                        data.message ||
+                                        "Operation failed."
+                                    );
+
+                                }
+
+
+                                showMessage(
+                                    data.message ||
+                                    "Operation completed successfully."
+                                );
+
+                                if (
+                                    button.classList.contains(
+                                        "cancel-availability"
+                                    )
+                                ) {
+                                    const row =
+                                        button.closest("tr");
+                                    const status =
+                                        row.querySelector(
+                                            ".availability-status"
+                                        );
+                                    status.className =
+                                        "status-badge availability-status status-inactive";
+                                    status.textContent = "Cancelled";
+                                    button.remove();
+                                    return;
+                                }
+
+
+                                setTimeout(
+                                    function () {
+
+                                        location.reload();
+
+                                    },
+                                    700
+                                );
+
+
+                            } catch (error) {
+
+                                button.disabled =
+                                    false;
+
+                                showMessage(
+                                    error.message ||
+                                    "Operation failed.",
+                                    "error"
+                                );
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+
+
+        /*
+         * Attach edit-section button.
+         */
+        function attachEditButton(
+            container = document
+        ) {
+
+            const buttons =
+                container.querySelectorAll(
+                    ".edit-section-button"
+                );
+
+
+            buttons.forEach(
+                function (button) {
+
+                    if (
+                        button.dataset.bound === "true"
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    button.dataset.bound =
+                        "true";
+
+
+                    button.addEventListener(
+                        "click",
+                        async function () {
+
+                            const sectionId =
+                                button.dataset.sectionId;
+
+                            const oldName =
+                                button.dataset.sectionName;
+
+
+                            const newName =
+                                prompt(
+                                    "Enter the new work area name:",
+                                    oldName
+                                );
+
+
+                            if (
+                                newName === null
+                            ) {
+
+                                return;
+
+                            }
+
+
+                            const cleanedName =
+                                newName.trim();
+
+
+                            if (
+                                !cleanedName
+                            ) {
+
+                                showMessage(
+                                    "Work area name cannot be empty.",
+                                    "error"
+                                );
+
+                                return;
+
+                            }
+
+
+                            const formData =
+                                new FormData();
+
+                            formData.append(
+                                "name",
+                                cleanedName
+                            );
+
+
+                            button.disabled =
+                                true;
+
+
+                            try {
+
+                                const response =
+                                    await fetch(
+                                        "/admin/sections/" +
+                                        sectionId +
+                                        "/edit",
+                                        {
+                                            method: "POST",
+                                            body: formData,
+                                            headers: {
+                                                "X-Requested-With":
+                                                    "XMLHttpRequest"
+                                            }
+                                        }
+                                    );
+
+
+                                const data =
+                                    await parseResponse(
+                                        response
+                                    );
+
+
+                                if (
+                                    !response.ok ||
+                                    data.success === false
+                                ) {
+
+                                    throw new Error(
+                                        data.message ||
+                                        "Could not edit work area."
+                                    );
+
+                                }
+
+
+                                const row =
+                                    Array.from(
+                                        document.querySelectorAll(
+                                            "#sectionsTable tbody tr"
+                                        )
+                                    ).find(
+                                        (item) =>
+                                            item.dataset.sectionId ===
+                                            sectionId
+                                    );
+
+                                if (row) {
+                                    row.querySelector(
+                                        ".section-name"
+                                    ).textContent = cleanedName;
+
+                                    row.querySelector(
+                                        ".edit-section-button"
+                                    ).dataset.sectionName = cleanedName;
+                                }
+
+                                Object.keys(
+                                    technicianCoverage
+                                ).forEach(function(staffId) {
+                                    technicianCoverage[staffId] =
+                                        technicianCoverage[staffId].map(
+                                            (area) =>
+                                                area === oldName
+                                                    ? cleanedName
+                                                    : area
+                                        );
+                                });
+
+                                updateCoverageSelects();
+                                updateAvailabilityAreas();
+
+                                showMessage(
+                                    "Hospital work area updated successfully."
+                                );
+
+
+                            } catch (error) {
+
+                                button.disabled =
+                                    false;
+
+                                showMessage(
+                                    error.message ||
+                                    "Could not edit work area.",
+                                    "error"
+                                );
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+
+
+        /*
+         * Escape text before placing it
+         * inside dynamically generated HTML.
+         */
+        function escapeHtml(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        /*
+         * Create staff form.
+         */
+        document
+            .getElementById("createStaffForm")
+            .addEventListener(
+                "submit",
+                function (event) {
+
+                    event.preventDefault();
+
+                    sendAjaxForm(this);
+
+                }
+            );
+
+
+        /*
+         * Add section form.
+         */
+        document
+            .getElementById("addSectionForm")
+            .addEventListener(
+                "submit",
+                function (event) {
+
+                    event.preventDefault();
+
+                    sendAjaxForm(this);
+
+                }
+            );
+
+        document
+            .getElementById("availabilityForm")
+            .addEventListener(
+                "submit",
+                function (event) {
+                    event.preventDefault();
+                    sendAjaxForm(this);
+                }
+            );
+
+        document
+            .getElementById("absenceStaff")
+            .addEventListener(
+                "change",
+                updateAvailabilityAreas
+            );
+
+        /*
+         * Existing coverage forms.
+         */
+        document
+            .querySelectorAll(
+                ".coverage-form"
+            )
+            .forEach(
+                function (form) {
+
+                    attachCoverageForm(
+                        form
+                    );
+
+                }
+            );
+
+
+        /*
+         * Existing AJAX buttons.
+         */
+        attachAjaxActions();
+
+        attachEditButton();
+
+
+        /*
+         * Populate coverage dropdowns.
+         */
+        updateCoverageSelects();
+        updateAvailabilityAreas();
+
+    </script>
+
+</body>
+</html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>IT Help Desk</title>
+    <title>Submit a request | ICT Service Desk</title>
 
     <style>
         * {
@@ -15,38 +15,54 @@
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background: #f4f5f7;
-            color: #252525;
+            background: #f4f7fb;
+            color: #1f2937;
+            min-height: 100vh;
         }
 
         .header {
-            background: #252a31;
+            background: #0f172a;
             color: white;
-            padding: 18px 7%;
+            padding: 22px 6%;
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            gap: 20px;
         }
 
         .brand {
-            font-size: 20px;
+            font-size: 21px;
             font-weight: bold;
         }
 
-        .technician-link {
-            color: #d7d9dc;
-            text-decoration: none;
-            font-size: 14px;
+        .brand-subtitle {
+            color: #cbd5e1;
+            font-size: 12px;
+            margin-top: 4px;
         }
 
-        .technician-link:hover {
+        .login-link {
             color: white;
+            text-decoration: none;
+            border: 1px solid #475569;
+            padding: 9px 14px;
+            border-radius: 7px;
+            font-size: 13px;
+        }
+
+        .login-link:hover {
+            background: #1e293b;
         }
 
         .container {
-            max-width: 850px;
-            margin: 45px auto;
-            padding: 0 20px;
+            width: 92%;
+            max-width: 1100px;
+            margin: 35px auto;
         }
 
         .intro {
@@ -55,343 +71,797 @@
 
         .intro h1 {
             font-size: 28px;
-            color: #252a31;
+            color: #0f172a;
             margin-bottom: 8px;
         }
 
         .intro p {
-            color: #666;
-            line-height: 1.5;
+            color: #64748b;
+            line-height: 1.6;
+            max-width: 750px;
         }
 
-        .form-card {
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .card {
             background: white;
-            border: 1px solid #dedfe1;
-            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
             padding: 30px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
         }
 
-        .form-title {
+        .card h2 {
             font-size: 19px;
-            color: #252a31;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #e5e5e5;
+            color: #0f172a;
+            margin-bottom: 6px;
         }
 
-        .error-box {
-            background: #f7e8e8;
-            border: 1px solid #dfc2c2;
-            color: #7a3b3b;
-            border-radius: 6px;
-            padding: 15px 18px;
-            margin-bottom: 22px;
-        }
-
-        .error-box strong {
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .error-box ul {
-            padding-left: 20px;
-        }
-
-        .error-box li {
-            margin-bottom: 4px;
+        .card-description {
+            color: #64748b;
             font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 25px;
         }
 
-        .form-row {
+        .form-section {
+            margin-bottom: 28px;
+        }
+
+        .form-section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #334155;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 18px;
+        }
+
+        .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 18px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 17px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
         }
 
         label {
             display: block;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
-            color: #444;
-            margin-bottom: 8px;
+            color: #334155;
+            margin-bottom: 7px;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        .optional {
+            color: #94a3b8;
+            font-weight: normal;
+            font-size: 11px;
         }
 
         input,
         textarea,
         select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #cfd3d8;
-            border-radius: 5px;
-            background: white;
-            color: #252525;
-            font-family: inherit;
+            padding: 12px 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-family: Arial, Helvetica, sans-serif;
             font-size: 14px;
+            color: #1f2937;
             outline: none;
+            background: white;
         }
 
         input:focus,
         textarea:focus,
         select:focus {
-            border-color: #707780;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+        }
+
+        select {
+            cursor: pointer;
         }
 
         textarea {
-            min-height: 140px;
+            min-height: 150px;
             resize: vertical;
+            line-height: 1.5;
         }
 
         .help-text {
-            margin-top: 6px;
-            font-size: 12px;
-            color: #777;
-        }
-
-        .submit-area {
-            border-top: 1px solid #e5e5e5;
-            padding-top: 20px;
+            color: #94a3b8;
+            font-size: 11px;
             margin-top: 5px;
-            display: flex;
-            justify-content: flex-end;
         }
 
-        button {
-            padding: 12px 22px;
-            background: #343a40;
-            color: white;
+        .errors {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            border-radius: 8px;
+            padding: 14px 17px;
+            margin-bottom: 22px;
+        }
+
+        .errors strong {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .errors ul {
+            padding-left: 18px;
+        }
+
+        .errors li {
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 14px;
             border: none;
-            border-radius: 5px;
-            font-size: 14px;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        button:hover {
-            background: #20252a;
+        .submit-button:hover {
+            background: #1d4ed8;
+        }
+
+        .side-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 23px;
+            margin-bottom: 18px;
+        }
+
+        .side-card h3 {
+            color: #0f172a;
+            font-size: 16px;
+            margin-bottom: 14px;
+        }
+
+        .side-card p {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .process-item {
+            display: flex;
+            gap: 11px;
+            margin-bottom: 17px;
+        }
+
+        .process-number {
+            width: 26px;
+            height: 26px;
+            min-width: 26px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .process-text strong {
+            display: block;
+            color: #334155;
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+
+        .process-text span {
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .notice {
+            background: #f8fafc;
+            border-left: 3px solid #2563eb;
+            padding: 12px;
+            margin-top: 20px;
+        }
+
+        .notice p {
+            font-size: 12px;
         }
 
         .footer {
             text-align: center;
-            color: #777;
+            color: #94a3b8;
             font-size: 12px;
-            margin-top: 25px;
+            padding: 10px 20px 25px;
         }
 
-        @media (max-width: 650px) {
-            .header {
-                padding: 16px 20px;
+        @media (max-width: 850px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .side-card {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header-inner {
+                align-items: flex-start;
+                flex-direction: column;
             }
 
             .container {
-                margin: 30px auto;
+                width: 94%;
+                margin: 25px auto;
             }
 
-            .form-row {
+            .card {
+                padding: 22px;
+            }
+
+            .form-grid {
                 grid-template-columns: 1fr;
                 gap: 0;
             }
 
-            .form-card {
-                padding: 22px;
+            .full-width {
+                grid-column: auto;
             }
 
             .intro h1 {
                 font-size: 24px;
             }
-
-            .submit-area {
-                justify-content: stretch;
-            }
-
-            button {
-                width: 100%;
-            }
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
 </head>
 
 <body>
 
-    <header class="header">
+<header class="header">
 
-        <div class="brand">
-            IT Help Desk
+    <div class="header-inner">
+
+        <div class="brand-lockup">
+            <img
+                class="brand-mark"
+                src="{{ url_for('static', filename='img/it-support-mark.svg') }}"
+                alt=""
+                width="42"
+                height="42"
+            >
+            <div class="brand-copy">
+                <strong>ICT Service Desk</strong>
+                <small>Technology support, made clear</small>
+            </div>
         </div>
 
-        <a href="/login" class="technician-link">
-            Technician Login
+        <a href="/login" class="login-link">
+            ICT Staff Login
         </a>
 
-    </header>
+    </div>
 
-    <main class="container">
+</header>
 
-        <div class="intro">
 
-            <h1>Submit a Support Request</h1>
+<main class="container">
 
-            <p>
-                Complete the form below to report an IT problem or request
-                technical assistance.
+    <div class="intro">
+
+        <h1>Submit an ICT Support Request</h1>
+
+        <p>
+            Select the type of technical problem you are experiencing
+            and provide any additional details that may help the ICT
+            support team investigate it.
+        </p>
+
+    </div>
+
+
+    <div class="layout">
+
+
+        <!-- ==========================================
+             REQUEST FORM
+             ========================================== -->
+
+        <div class="card">
+
+            <h2>Support Request</h2>
+
+            <p class="card-description">
+                Fields marked with <span class="required">*</span>
+                are required.
             </p>
 
-        </div>
 
-        <div class="form-card">
-
-            <div class="form-title">
-                Support Ticket Details
-            </div>
+            <!-- Validation Errors -->
 
             {% if errors %}
 
-            <div class="error-box">
+                <div class="errors">
 
-                <strong>Please correct the following:</strong>
+                    <strong>Please correct the following:</strong>
 
-                <ul>
-                    {% for error in errors %}
-                    <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
+                    <ul>
 
-            </div>
+                        {% for error in errors %}
+
+                            <li>{{ error }}</li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
 
             {% endif %}
 
-            <form method="POST" action="/create-ticket">
 
-                <div class="form-row">
+            <form method="POST" action="{{ url_for('submit_ticket') }}">
+
+
+                <!-- ======================================
+                     REQUESTER INFORMATION
+                     ====================================== -->
+
+                <div class="form-section">
+
+                    <div class="form-section-title">
+                        Requester Information
+                    </div>
+
+                    <div class="form-grid">
+
+
+                        <div class="form-group">
+
+                            <label for="name">
+                                Full Name
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder="Enter your full name"
+                                value="{{ form.get('name', '') if form else '' }}"
+                                maxlength="100"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="department">
+                                Department / Work Area
+                                <span class="required">*</span>
+                            </label>
+
+                            <select
+                                id="department"
+                                name="department"
+                                required
+                            >
+                                <option value="">Select your work area</option>
+                                {% for section in sections %}
+                                    <option value="{{ section['name'] }}">
+                                        {{ section['name'] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <div class="help-text">
+                                Choose the area where the problem is occurring.
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="phone">
+                                Phone Number
+                                <span class="optional">(Optional)</span>
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                placeholder="e.g. 07XX XXX XXX"
+                                value="{{ form.get('phone', '') if form else '' }}"
+                                maxlength="30"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                Email Address
+                                <span class="optional">(Optional)</span>
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="name@hospital.org"
+                                value="{{ form.get('email', '') if form else '' }}"
+                                maxlength="150"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label for="location">
+                                Specific Location
+                                <span class="optional">(Optional)</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="location"
+                                name="location"
+                                placeholder="e.g. Pharmacy reception, Ward 2, Office 4"
+                                value="{{ form.get('location', '') if form else '' }}"
+                                maxlength="150"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ======================================
+                     PROBLEM INFORMATION
+                     ====================================== -->
+
+                <div class="form-section">
+
+                    <div class="form-section-title">
+                        Problem Information
+                    </div>
+
 
                     <div class="form-group">
 
-                        <label for="name">
-                            Your Name
+                        <label for="subject">
+                            Problem Type
+                            <span class="required">*</span>
+                        </label>
+
+                        <select
+                            id="subject"
+                            name="subject"
+                            required
+                        >
+
+                            <option value="">
+                                Select the problem you are experiencing
+                            </option>
+
+                            <option
+                                value="Computer not turning on"
+                                {% if form and form.get('subject') == 'Computer not turning on' %}selected{% endif %}
+                            >
+                                Computer not turning on
+                            </option>
+
+                            <option
+                                value="Printer not printing"
+                                {% if form and form.get('subject') == 'Printer not printing' %}selected{% endif %}
+                            >
+                                Printer not printing
+                            </option>
+
+                            <option
+                                value="Network/internet problem"
+                                {% if form and form.get('subject') == 'Network/internet problem' %}selected{% endif %}
+                            >
+                                Network/internet problem
+                            </option>
+
+                            <option
+                                value="Wi-Fi not connecting"
+                                {% if form and form.get('subject') == 'Wi-Fi not connecting' %}selected{% endif %}
+                            >
+                                Wi-Fi not connecting
+                            </option>
+
+                            <option
+                                value="System/application not working"
+                                {% if form and form.get('subject') == 'System/application not working' %}selected{% endif %}
+                            >
+                                System/application not working
+                            </option>
+
+                            <option
+                                value="Login/password problem"
+                                {% if form and form.get('subject') == 'Login/password problem' %}selected{% endif %}
+                            >
+                                Login/password problem
+                            </option>
+
+                            <option
+                                value="Keyboard/mouse problem"
+                                {% if form and form.get('subject') == 'Keyboard/mouse problem' %}selected{% endif %}
+                            >
+                                Keyboard/mouse problem
+                            </option>
+
+                            <option
+                                value="Monitor/display problem"
+                                {% if form and form.get('subject') == 'Monitor/display problem' %}selected{% endif %}
+                            >
+                                Monitor/display problem
+                            </option>
+
+                            <option
+                                value="Scanner problem"
+                                {% if form and form.get('subject') == 'Scanner problem' %}selected{% endif %}
+                            >
+                                Scanner problem
+                            </option>
+
+                            <option
+                                value="Email problem"
+                                {% if form and form.get('subject') == 'Email problem' %}selected{% endif %}
+                            >
+                                Email problem
+                            </option>
+
+                            <option
+                                value="Slow computer"
+                                {% if form and form.get('subject') == 'Slow computer' %}selected{% endif %}
+                            >
+                                Slow computer
+                            </option>
+
+                            <option
+                                value="Other"
+                                {% if form and form.get('subject') == 'Other' %}selected{% endif %}
+                            >
+                                Other
+                            </option>
+
+                        </select>
+
+                        <div class="help-text">
+                            Select the option that best describes the problem.
+                            Choose "Other" if the problem is not listed.
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="description">
+                            Describe the Problem
+                            <span class="required">*</span>
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            placeholder="Provide any additional details, error message, or unusual behavior you noticed..."
+                            maxlength="5000"
+                            required
+                        >{{ form.get('description', '') if form else '' }}</textarea>
+
+                        <div class="help-text">
+                            Provide any additional information that may
+                            help the ICT team investigate the problem.
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="equipment">
+                            Equipment / Device
+                            <span class="optional">(Optional)</span>
                         </label>
 
                         <input
                             type="text"
-                            id="name"
-                            name="name"
-                            placeholder="Enter your full name"
-                            value="{{ form.get('name', '') if form else '' }}"
-                            required
-                        >
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="email">
-                            Email Address
-                        </label>
-
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="Enter your email address"
-                            value="{{ form.get('email', '') if form else '' }}"
-                            required
+                            id="equipment"
+                            name="equipment"
+                            placeholder="e.g. HP desktop, printer, laptop, network connection"
+                            value="{{ form.get('equipment', '') if form else '' }}"
+                            maxlength="150"
                         >
 
                     </div>
 
                 </div>
 
-                <div class="form-group">
 
-                    <label for="subject">
-                        Problem / Subject
-                    </label>
+                <!-- ======================================
+                     SUBMIT
+                     ====================================== -->
 
-                    <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        placeholder="Briefly describe the problem"
-                        value="{{ form.get('subject', '') if form else '' }}"
-                        required
-                    >
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="description">
-                        Problem Description
-                    </label>
-
-                    <textarea
-                        id="description"
-                        name="description"
-                        placeholder="Provide details about the issue, including any error messages or steps that led to the problem."
-                        required
-                    >{{ form.get('description', '') if form else '' }}</textarea>
-
-                    <div class="help-text">
-                        Please provide enough information to help the technician understand the issue.
-                    </div>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="priority">
-                        Priority
-                    </label>
-
-                    <select
-                        id="priority"
-                        name="priority"
-                        required
-                    >
-
-                        <option value="Low"
-                            {% if form and form.get('priority') == 'Low' %}selected{% endif %}>
-                            Low - General request
-                        </option>
-
-                        <option value="Medium"
-                            {% if form and form.get('priority') == 'Medium' %}selected{% endif %}>
-                            Medium - Normal issue
-                        </option>
-
-                        <option value="High"
-                            {% if form and form.get('priority') == 'High' %}selected{% endif %}>
-                            High - Significant disruption
-                        </option>
-
-                        <option value="Critical"
-                            {% if form and form.get('priority') == 'Critical' %}selected{% endif %}>
-                            Critical - Major service interruption
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="submit-area">
-
-                    <button type="submit">
-                        Submit Support Ticket
-                    </button>
-
-                </div>
+                <button
+                    type="submit"
+                    class="submit-button"
+                >
+                    Submit Support Request
+                </button>
 
             </form>
 
         </div>
 
-        <div class="footer">
-            IT Help Desk System
-        </div>
 
-    </main>
+        <!-- ==========================================
+             INFORMATION PANEL
+             ========================================== -->
+
+        <aside>
+
+
+            <div class="side-card">
+
+                <h3>How It Works</h3>
+
+
+                <div class="process-item">
+
+                    <div class="process-number">
+                        1
+                    </div>
+
+                    <div class="process-text">
+
+                        <strong>Submit Request</strong>
+
+                        <span>
+                            Select the type of ICT problem and provide
+                            any additional details.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="process-item">
+
+                    <div class="process-number">
+                        2
+                    </div>
+
+                    <div class="process-text">
+
+                        <strong>ICT Review</strong>
+
+                        <span>
+                            The ICT team reviews the request,
+                            assesses priority and categorizes it.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="process-item">
+
+                    <div class="process-number">
+                        3
+                    </div>
+
+                    <div class="process-text">
+
+                        <strong>Assignment</strong>
+
+                        <span>
+                            The request can be automatically
+                            routed to the appropriate ICT staff member.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="process-item">
+
+                    <div class="process-number">
+                        4
+                    </div>
+
+                    <div class="process-text">
+
+                        <strong>Resolution</strong>
+
+                        <span>
+                            ICT investigates the problem,
+                            records the action taken and resolves it.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="side-card">
+
+                <h3>What Should I Report?</h3>
+
+                <p>
+                    You can report problems involving computers,
+                    printers, network connectivity, hospital systems,
+                    user accounts, software, hardware or other ICT
+                    services.
+                </p>
+
+                <div class="notice">
+
+                    <p>
+                        <strong>Tip:</strong>
+                        If you see an error message, include the
+                        message in your description.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </aside>
+
+    </div>
+
+</main>
+
+
+<footer class="footer">
+    ICT Service Desk · Internal support portal
+</footer>
+
 
 </body>
 </html>

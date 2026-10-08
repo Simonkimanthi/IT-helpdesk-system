@@ -4,296 +4,1379 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Ticket #{{ ticket["id"] }}</title>
+    <title>{{ display_ticket_number }} | ICT Service Desk</title>
 
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             background: #f4f7fb;
             color: #1f2937;
         }
 
-        header {
-            background: #1f2937;
-            color: white;
-            padding: 25px 5%;
+        .app {
+            min-height: 100vh;
         }
 
-        header h1 {
-            margin: 0;
+        /* =========================================
+           TOPBAR
+           ========================================= */
+
+        .topbar {
+            height: 70px;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 35px;
         }
+
+        .brand {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .brand-subtitle {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user {
+            color: #cbd5e1;
+            font-size: 12px;
+        }
+
+        .logout {
+            color: #cbd5e1;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 8px 12px;
+            text-decoration: none;
+            font-size: 11px;
+        }
+
+        .logout:hover {
+            background: #1e293b;
+            color: white;
+        }
+
+        /* =========================================
+           CONTENT
+           ========================================= */
 
         .container {
-            width: 90%;
-            max-width: 900px;
+            width: 94%;
+            max-width: 1250px;
             margin: 30px auto;
         }
 
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            margin-bottom: 20px;
-        }
-
-        .ticket-number {
-            color: #64748b;
-            margin-bottom: 25px;
-        }
-
-        .detail {
-            margin-bottom: 20px;
-        }
-
-        .detail-label {
-            font-size: 13px;
-            font-weight: bold;
-            color: #64748b;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-
-        .detail-value {
-            font-size: 17px;
-        }
-
-        .description,
-        .resolution-display {
-            background: #f8fafc;
-            padding: 18px;
-            border-radius: 8px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-        }
-
-        .priority {
-            font-weight: bold;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 7px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-            background: #fff7ed;
-            color: #c2410c;
-        }
-
-        .status-form,
-        .resolution-form {
-            margin-top: 30px;
-            padding-top: 25px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-bottom: 12px;
-            font-family: Arial, sans-serif;
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .update-button {
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .update-button:hover {
-            background: #1d4ed8;
-        }
-
         .back-link {
+            display: inline-block;
             color: #2563eb;
             text-decoration: none;
-            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 18px;
         }
 
         .back-link:hover {
             text-decoration: underline;
         }
+
+        .ticket-header {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 22px 25px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .ticket-number {
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .ticket-title {
+            color: #0f172a;
+            font-size: 23px;
+            margin-bottom: 7px;
+        }
+
+        .ticket-created {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .priority-high {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .priority-critical {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status-open {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-assigned {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-progress {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .status-resolved {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        /* =========================================
+           GRID
+           ========================================= */
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 23px;
+            margin-bottom: 20px;
+        }
+
+        .card:last-child {
+            margin-bottom: 0;
+        }
+
+        .card-title {
+            color: #0f172a;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card-subtitle {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-bottom: 20px;
+        }
+
+        /* =========================================
+           INFORMATION
+           ========================================= */
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 17px;
+        }
+
+        .info-item {
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+        }
+
+        .info-label {
+            color: #94a3b8;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #334155;
+            font-size: 13px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .description {
+            margin-top: 22px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .description-label {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .description-text {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 7px;
+            padding: 15px;
+            color: #334155;
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        /* =========================================
+           FORMS
+           ========================================= */
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        label {
+            display: block;
+            color: #334155;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        select,
+        textarea,
+        input {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px 11px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            color: #334155;
+            background: white;
+            outline: none;
+        }
+
+        select:focus,
+        textarea:focus,
+        input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+        }
+
+        textarea {
+            min-height: 125px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .button {
+            border: none;
+            border-radius: 6px;
+            padding: 10px 15px;
+            background: #2563eb;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #1d4ed8;
+        }
+
+        .button-secondary {
+            background: #475569;
+        }
+
+        .button-secondary:hover {
+            background: #334155;
+        }
+
+        .button-danger {
+            background: #dc2626;
+        }
+
+        .button-danger:hover {
+            background: #b91c1c;
+        }
+
+        /* =========================================
+           ASSIGNMENT
+           ========================================= */
+
+        .assignment-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .current-assignee {
+            margin-bottom: 15px;
+        }
+
+        .current-assignee-label {
+            color: #94a3b8;
+            font-size: 10px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .current-assignee-name {
+            color: #334155;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .assignment-form {
+            display: flex;
+            gap: 8px;
+        }
+
+        .assignment-form select {
+            flex: 1;
+        }
+
+        /* =========================================
+           RESOLUTION
+           ========================================= */
+
+        .resolution-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .resolution-label {
+            color: #166534;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .resolution-text {
+            color: #365314;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        /* =========================================
+           HISTORY
+           ========================================= */
+
+        .history {
+            position: relative;
+        }
+
+        .history-item {
+            position: relative;
+            padding-left: 23px;
+            padding-bottom: 21px;
+            border-left: 1px solid #cbd5e1;
+            margin-left: 5px;
+        }
+
+        .history-item:last-child {
+            border-left: none;
+            padding-bottom: 0;
+        }
+
+        .history-dot {
+            position: absolute;
+            left: -5px;
+            top: 0;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #2563eb;
+        }
+
+        .history-action {
+            color: #334155;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .history-meta {
+            color: #94a3b8;
+            font-size: 10px;
+            margin-bottom: 7px;
+        }
+
+        .history-details {
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .empty-history {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        /* =========================================
+           ADMIN NOTICE
+           ========================================= */
+
+        .admin-label {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* =========================================
+           FOOTER
+           ========================================= */
+
+        .footer {
+            text-align: right;
+            color: #94a3b8;
+            font-size: 10px;
+            padding: 20px 0;
+        }
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+        @media (max-width: 900px) {
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            .topbar {
+                height: auto;
+                padding: 17px;
+                gap: 12px;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .topbar-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .container {
+                width: 94%;
+                margin: 20px auto;
+            }
+
+            .ticket-header {
+                flex-direction: column;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .assignment-form {
+                flex-direction: column;
+            }
+
+            .assignment-form .button {
+                width: 100%;
+            }
+
+        }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
 </head>
 
 <body>
 
-<header>
-    <h1>IT Help Desk</h1>
-</header>
+<div class="app">
 
-<div class="container">
 
-    <div class="card">
+    <!-- =========================================
+         TOPBAR
+         ========================================= -->
 
-        <h2>Ticket Details</h2>
+    <header class="topbar">
 
-        <div class="ticket-number">
-            Ticket #{{ ticket["id"] }}
-        </div>
+        <a class="brand-lockup" href="{{ url_for('dashboard') }}">
+            <img
+                class="brand-mark"
+                src="{{ url_for('static', filename='img/it-support-mark.svg') }}"
+                alt=""
+                width="42"
+                height="42"
+            >
+            <span class="brand-copy">
+                <strong>ICT Service Desk</strong>
+                <small>Support operations</small>
+            </span>
+        </a>
 
-        <div class="detail">
-            <div class="detail-label">User</div>
-            <div class="detail-value">
-                {{ ticket["name"] }}
+
+        <div class="topbar-right">
+
+            <div class="user">
+                {{ staff["name"] }}
             </div>
+
+            <a
+                href="/logout"
+                class="logout"
+            >
+                Sign Out
+            </a>
+
         </div>
 
-        <div class="detail">
-            <div class="detail-label">Email</div>
-            <div class="detail-value">
-                {{ ticket["email"] }}
+    </header>
+
+
+    <!-- =========================================
+         MAIN CONTENT
+         ========================================= -->
+
+    <main class="container">
+
+
+        <a
+            href="/dashboard"
+            class="back-link"
+        >
+            Return to dashboard
+        </a>
+
+
+        <!-- =====================================
+             TICKET HEADER
+             ===================================== -->
+
+        <section class="ticket-header">
+
+            <div>
+
+                <div class="ticket-number">
+                    {{ display_ticket_number }}
+                </div>
+
+                <h1 class="ticket-title">
+                    {{ ticket["subject"] }}
+                </h1>
+
+                <div class="ticket-created">
+
+                    Submitted:
+                    {{ ticket["created_at"] or "Date not recorded" }}
+
+                </div>
+
             </div>
-        </div>
-
-        <div class="detail">
-            <div class="detail-label">Subject</div>
-            <div class="detail-value">
-                {{ ticket["subject"] }}
-            </div>
-        </div>
-
-        <div class="detail">
-            <div class="detail-label">Description</div>
-            <div class="description">
-                {{ ticket["description"] }}
-            </div>
-        </div>
-
-        <div class="detail">
-            <div class="detail-label">Priority</div>
-            <div class="detail-value priority">
-                {{ ticket["priority"] }}
-            </div>
-        </div>
-
-        <div class="detail">
-            <div class="detail-label">Current Status</div>
-            <div class="detail-value">
-                <span class="status">
-                    {{ ticket["status"] }}
-                </span>
-            </div>
-        </div>
 
 
-        <!-- Status Update -->
+            <div class="badges">
 
-        <div class="status-form">
 
-            <form method="POST"
-                  action="/update-status/{{ ticket['id'] }}">
+                {% if ticket["priority"] == "Low" %}
 
-                <label for="status">
-                    Update Ticket Status
-                </label>
+                    <span class="badge priority-low">
+                        Low Priority
+                    </span>
 
-                <select name="status" id="status">
+                {% elif ticket["priority"] == "High" %}
 
-                    <option value="Open"
-                        {% if ticket["status"] == "Open" %}
-                            selected
-                        {% endif %}>
+                    <span class="badge priority-high">
+                        High Priority
+                    </span>
+
+                {% elif ticket["priority"] == "Critical" %}
+
+                    <span class="badge priority-critical">
+                        Critical Priority
+                    </span>
+
+                {% else %}
+
+                    <span class="badge priority-medium">
+                        Medium Priority
+                    </span>
+
+                {% endif %}
+
+
+                {% if ticket["status"] == "Open" %}
+
+                    <span class="badge status-open">
                         Open
-                    </option>
+                    </span>
 
-                    <option value="In Progress"
-                        {% if ticket["status"] == "In Progress" %}
-                            selected
-                        {% endif %}>
+                {% elif ticket["status"] == "Assigned" %}
+
+                    <span class="badge status-assigned">
+                        Assigned
+                    </span>
+
+                {% elif ticket["status"] == "In Progress" %}
+
+                    <span class="badge status-progress">
                         In Progress
-                    </option>
+                    </span>
 
-                    <option value="Resolved"
-                        {% if ticket["status"] == "Resolved" %}
-                            selected
-                        {% endif %}>
+                {% elif ticket["status"] == "Resolved" %}
+
+                    <span class="badge status-resolved">
                         Resolved
-                    </option>
+                    </span>
 
-                </select>
+                {% endif %}
 
-                <button class="update-button" type="submit">
-                    Update Status
-                </button>
-
-            </form>
-
-        </div>
-
-
-        <!-- Resolution -->
-
-        <div class="resolution-form">
-
-            <form method="POST"
-                  action="/update-resolution/{{ ticket['id'] }}">
-
-                <label for="resolution">
-                    Technician Resolution / Notes
-                </label>
-
-                <textarea
-                    name="resolution"
-                    id="resolution"
-                    placeholder="Describe what was done to resolve the issue..."
-                >{{ ticket["resolution"] }}</textarea>
-
-                <button class="update-button" type="submit">
-                    Save Resolution
-                </button>
-
-            </form>
-
-        </div>
-
-
-        <!-- Saved Resolution -->
-
-        {% if ticket["resolution"] %}
-
-        <div class="detail">
-            <div class="detail-label">
-                Saved Resolution
             </div>
 
-            <div class="resolution-display">
-                {{ ticket["resolution"] }}
+        </section>
+
+
+        <div class="layout">
+
+
+            <!-- =================================
+                 LEFT COLUMN
+                 ================================= -->
+
+            <div>
+
+
+                <!-- REQUEST DETAILS -->
+
+                <section class="card">
+
+                    <h2 class="card-title">
+                        Request Details
+                    </h2>
+
+                    <p class="card-subtitle">
+                        Information provided by the hospital staff member.
+                    </p>
+
+
+                    <div class="info-grid">
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Requester
+                            </div>
+
+                            <div class="info-value">
+                                {{ ticket["name"] }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Department / Work Area
+                            </div>
+
+                            <div class="info-value">
+                                {{ ticket["department"] or "Not provided" }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Location
+                            </div>
+
+                            <div class="info-value">
+                                {{ ticket["location"] or "Not provided" }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Equipment / Device
+                            </div>
+
+                            <div class="info-value">
+                                {{ ticket["equipment"] or "Not provided" }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Phone
+                            </div>
+
+                            <div class="info-value">
+                                {{ ticket["phone"] or "Not provided" }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Email
+                            </div>
+
+                            <div class="info-value">
+                                {{ ticket["email"] or "Not provided" }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Assigned ICT Staff
+                            </div>
+
+                            <div class="info-value">
+
+                                {% if ticket["assigned_staff_name"] %}
+                                    {{ ticket["assigned_staff_name"] }}
+                                {% else %}
+                                    Not assigned
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Category
+                            </div>
+
+                            <div class="info-value">
+                                {{ ticket["category"] or "Not classified" }}
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="description">
+
+                        <div class="description-label">
+                            PROBLEM DESCRIPTION
+                        </div>
+
+                        <div class="description-text">
+                            {{ ticket["description"] }}
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- RESOLUTION -->
+
+                <section class="card">
+
+                    <h2 class="card-title">
+                        Resolution & Technician Notes
+                    </h2>
+
+                    <p class="card-subtitle">
+                        Record the investigation, action taken and final resolution.
+                    </p>
+
+
+                    {% if ticket["resolution"] %}
+
+                        <div class="resolution-box">
+
+                            <div class="resolution-label">
+                                CURRENT RESOLUTION
+                            </div>
+
+                            <div class="resolution-text">
+                                {{ ticket["resolution"] }}
+                            </div>
+
+                        </div>
+
+                        <br>
+
+                    {% endif %}
+
+
+                    <form
+                        method="POST"
+                        action="/update-resolution/{{ ticket['id'] }}"
+                    >
+
+                        <div class="form-group">
+
+                            <label for="resolution">
+                                Resolution / Final Action
+                            </label>
+
+                            <textarea
+                                id="resolution"
+                                name="resolution"
+                                maxlength="5000"
+                                placeholder="Describe the cause identified, troubleshooting performed, action taken, and final outcome..."
+                            >{{ ticket["resolution"] or "" }}</textarea>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="button"
+                        >
+                            Save Resolution
+                        </button>
+
+                    </form>
+
+                </section>
+
+
+                <!-- INTERNAL NOTE -->
+
+                <section class="card">
+
+                    <h2 class="card-title">
+                        Add Internal Note
+                    </h2>
+
+                    <p class="card-subtitle">
+                        Add investigation notes or information for the ICT team.
+                    </p>
+
+
+                    <form
+                        method="POST"
+                        action="/add-note/{{ ticket['id'] }}"
+                    >
+
+                        <div class="form-group">
+
+                            <label for="note">
+                                Note
+                            </label>
+
+                            <textarea
+                                id="note"
+                                name="note"
+                                maxlength="5000"
+                                placeholder="Enter an internal investigation note..."
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="button button-secondary"
+                        >
+                            Add Note
+                        </button>
+
+                    </form>
+
+                </section>
+
+
+                <!-- HISTORY -->
+
+                <section class="card">
+
+                    <h2 class="card-title">
+                        Ticket History
+                    </h2>
+
+                    <p class="card-subtitle">
+                        Record of actions performed on this request.
+                    </p>
+
+
+                    <div class="history">
+
+                        {% if history %}
+
+                            {% for item in history %}
+
+                                <div class="history-item">
+
+                                    <div class="history-dot"></div>
+
+                                    <div class="history-action">
+                                        {{ item["action"] }}
+                                    </div>
+
+                                    <div class="history-meta">
+
+                                        {% if item["staff_name"] %}
+                                            {{ item["staff_name"] }}
+                                        {% else %}
+                                            Hospital Staff
+                                        {% endif %}
+
+                                        ·
+
+                                        {{ item["created_at"] }}
+
+                                    </div>
+
+                                    {% if item["details"] %}
+
+                                        <div class="history-details">
+                                            {{ item["details"] }}
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <div class="empty-history">
+                                No history has been recorded yet.
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </section>
+
+
             </div>
+
+
+            <!-- =================================
+                 RIGHT COLUMN
+                 ================================= -->
+
+            <div>
+
+
+                <!-- ADMIN ASSIGNMENT -->
+
+                {% if staff["role"] == "admin" %}
+
+                    <section class="card">
+
+                        <div class="admin-label">
+                            ADMINISTRATOR CONTROL
+                        </div>
+
+                        <h2 class="card-title">
+                            Assignment
+                        </h2>
+
+                        <p class="card-subtitle">
+                            Assign or reassign this request to an ICT staff member.
+                        </p>
+
+
+                        <div class="assignment-box">
+
+
+                            <div class="current-assignee">
+
+                                <div class="current-assignee-label">
+                                    Current Assignment
+                                </div>
+
+                                <div class="current-assignee-name">
+
+                                    {% if ticket["assigned_staff_name"] %}
+                                        {{ ticket["assigned_staff_name"] }}
+                                    {% else %}
+                                        Unassigned
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <form
+                                method="POST"
+                                action="/assign-ticket/{{ ticket['id'] }}"
+                                class="assignment-form"
+                            >
+
+                                <select name="assigned_to">
+
+                                    <option value="">
+                                        Unassigned
+                                    </option>
+
+
+                                    {% for member in ict_staff %}
+
+                                        <option
+                                            value="{{ member['id'] }}"
+                                            {% if ticket["assigned_to"] == member["id"] %}
+                                                selected
+                                            {% endif %}
+                                        >
+
+                                            {{ member["name"] }}
+
+                                            {% if member["role"] == "admin" %}
+                                                (Administrator)
+                                            {% else %}
+                                                (Technician)
+                                            {% endif %}
+
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+
+                                <button
+                                    type="submit"
+                                    class="button"
+                                >
+                                    Assign
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </section>
+
+                {% endif %}
+
+
+                <!-- PRIORITY -->
+
+                <section class="card">
+
+                    <h2 class="card-title">
+                        Priority Assessment
+                    </h2>
+
+                    <p class="card-subtitle">
+                        ICT determines the urgency after reviewing the request.
+                    </p>
+
+
+                    <form
+                        method="POST"
+                        action="/update-priority/{{ ticket['id'] }}"
+                    >
+
+                        <div class="form-group">
+
+                            <label for="priority">
+                                Priority
+                            </label>
+
+                            <select
+                                id="priority"
+                                name="priority"
+                            >
+
+                                <option
+                                    value="Low"
+                                    {% if ticket["priority"] == "Low" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Low
+                                </option>
+
+                                <option
+                                    value="Medium"
+                                    {% if ticket["priority"] == "Medium" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Medium
+                                </option>
+
+                                <option
+                                    value="High"
+                                    {% if ticket["priority"] == "High" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    High
+                                </option>
+
+                                <option
+                                    value="Critical"
+                                    {% if ticket["priority"] == "Critical" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Critical
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="button"
+                        >
+                            Update Priority
+                        </button>
+
+                    </form>
+
+                </section>
+
+
+                <!-- CATEGORY -->
+
+                <section class="card">
+
+                    <h2 class="card-title">
+                        ICT Classification
+                    </h2>
+
+                    <p class="card-subtitle">
+                        Classify the technical issue during investigation.
+                    </p>
+
+
+                    <form
+                        method="POST"
+                        action="/update-category/{{ ticket['id'] }}"
+                    >
+
+                        <div class="form-group">
+
+                            <label for="category">
+                                Category
+                            </label>
+
+                            <input
+                                type="text"
+                                id="category"
+                                name="category"
+                                maxlength="100"
+                                value="{{ ticket['category'] or '' }}"
+                                placeholder="e.g. Network, Printer, Software, Hardware"
+                            >
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="button"
+                        >
+                            Save Category
+                        </button>
+
+                    </form>
+
+                </section>
+
+
+                <!-- STATUS -->
+
+                <section class="card">
+
+                    <h2 class="card-title">
+                        Ticket Status
+                    </h2>
+
+                    <p class="card-subtitle">
+                        Update the current stage of the support request.
+                    </p>
+
+
+                    <form
+                        method="POST"
+                        action="/update-status/{{ ticket['id'] }}"
+                    >
+
+                        <div class="form-group">
+
+                            <label for="status">
+                                Status
+                            </label>
+
+                            <select
+                                id="status"
+                                name="status"
+                            >
+
+                                <option
+                                    value="Open"
+                                    {% if ticket["status"] == "Open" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Open
+                                </option>
+
+                                <option
+                                    value="Assigned"
+                                    {% if ticket["status"] == "Assigned" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Assigned
+                                </option>
+
+                                <option
+                                    value="In Progress"
+                                    {% if ticket["status"] == "In Progress" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    In Progress
+                                </option>
+
+                                <option
+                                    value="Resolved"
+                                    {% if ticket["status"] == "Resolved" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Resolved
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="button"
+                        >
+                            Update Status
+                        </button>
+
+                    </form>
+
+                </section>
+
+
+                <!-- RESOLUTION INFORMATION -->
+
+                {% if ticket["resolved_at"] %}
+
+                    <section class="card">
+
+                        <h2 class="card-title">
+                            Resolution Information
+                        </h2>
+
+                        <p class="card-subtitle">
+                            Completion information for this request.
+                        </p>
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Resolved At
+                            </div>
+
+                            <div class="info-value">
+                                {{ ticket["resolved_at"] }}
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                {% endif %}
+
+
+            </div>
+
         </div>
 
-        {% endif %}
 
-    </div>
+        <footer class="footer">
+            @kimanthi-labs
+        </footer>
 
-    <a class="back-link" href="/dashboard">
-        ← Back to Dashboard
-    </a>
+
+    </main>
 
 </div>
 

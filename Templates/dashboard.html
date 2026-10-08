@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Technician Dashboard | IT Help Desk</title>
+    <title>
+        {% if staff["role"] == "admin" %}
+            ICT Dashboard
+        {% else %}
+            Technician Dashboard
+        {% endif %}
+        - ICT Service Desk
+    </title>
 
     <style>
         * {
@@ -15,174 +22,303 @@
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background: #f4f5f7;
-            color: #252525;
+            background: #f4f6f9;
+            color: #1f2937;
         }
 
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
         .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 230px;
-            height: 100vh;
-            background: #252a31;
+            width: 250px;
+            background: #111827;
             color: white;
-            padding: 25px 18px;
+            padding: 24px 18px;
+            display: flex;
+            flex-direction: column;
         }
 
         .brand {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 35px;
-            padding-left: 10px;
+            padding: 0 10px 28px;
+            border-bottom: 1px solid #374151;
         }
 
-        .nav-title {
-            font-size: 11px;
-            color: #9da3aa;
-            text-transform: uppercase;
-            margin: 0 0 10px 10px;
-            letter-spacing: 1px;
+        .brand h1 {
+            font-size: 21px;
+            margin-bottom: 6px;
         }
 
-        .nav-link {
+        .brand p {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .nav {
+            margin-top: 25px;
+        }
+
+        .nav a {
             display: block;
-            color: #d7d9dc;
+            color: #d1d5db;
             text-decoration: none;
-            padding: 12px 10px;
-            border-radius: 5px;
-            margin-bottom: 5px;
+            padding: 12px 13px;
+            border-radius: 7px;
+            margin-bottom: 7px;
             font-size: 14px;
         }
 
-        .nav-link:hover {
-            background: #343a42;
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .nav a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid #374151;
+        }
+
+        .sidebar-user {
+            font-size: 13px;
+            color: #d1d5db;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-user strong {
             color: white;
         }
 
         .logout {
-            position: absolute;
-            bottom: 25px;
-            left: 18px;
-            right: 18px;
-            color: #d7d9dc;
+            display: block;
             text-decoration: none;
-            padding: 12px 10px;
-            font-size: 14px;
+            color: #fca5a5;
+            font-size: 13px;
+            padding: 8px 0;
         }
 
+        .logout:hover {
+            color: #fecaca;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
         .main {
-            margin-left: 230px;
-            padding: 30px;
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
         }
 
         .topbar {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            gap: 20px;
         }
 
-        .topbar h1 {
-            font-size: 25px;
-            color: #252a31;
+        .topbar h2 {
+            font-size: 24px;
+            color: #111827;
+            margin-bottom: 5px;
         }
 
-        .user {
-            font-size: 14px;
-            color: #666;
+        .topbar p {
+            font-size: 13px;
+            color: #6b7280;
         }
 
-        .stats {
+        .role-badge {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        /* =========================
+           COVERAGE
+        ========================= */
+
+        .coverage-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 25px;
+        }
+
+        .coverage-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #6b7280;
+            margin-bottom: 12px;
+            letter-spacing: 0.4px;
+        }
+
+        .coverage-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .coverage-item {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            padding: 7px 11px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .coverage-empty {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* =========================
+           STATISTICS
+        ========================= */
+
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
             margin-bottom: 28px;
         }
 
         .stat-card {
             background: white;
-            border: 1px solid #e1e3e6;
-            border-radius: 8px;
-            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 18px;
         }
 
         .stat-label {
-            color: #777;
-            font-size: 13px;
+            color: #6b7280;
+            font-size: 12px;
             margin-bottom: 8px;
         }
 
-        .stat-number {
+        .stat-value {
+            color: #111827;
             font-size: 27px;
-            font-weight: bold;
-            color: #252a31;
+            font-weight: 700;
         }
 
-        .section {
+        .stat-note {
+            color: #9ca3af;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        /* =========================
+           REQUESTS
+        ========================= */
+
+        .requests-card {
             background: white;
-            border: 1px solid #e1e3e6;
-            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
             overflow: hidden;
         }
 
-        .section-header {
+        .requests-header {
             padding: 20px;
-            border-bottom: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
-        .section-header h2 {
-            font-size: 18px;
-            color: #252a31;
+        .requests-header h3 {
+            font-size: 17px;
+            color: #111827;
+            margin-bottom: 4px;
         }
 
-        .search-form {
+        .requests-header p {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .controls {
             display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-label {
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .date-range-controls {
+            display: flex;
+            align-items: center;
             gap: 8px;
         }
 
-        .search-input {
-            width: 260px;
-            padding: 10px 12px;
-            border: 1px solid #cfd3d8;
-            border-radius: 5px;
-            font-size: 14px;
+        .date-range-controls[hidden] {
+            display: none;
+        }
+
+        .controls select,
+        .controls input {
+            height: 38px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 0 11px;
+            font-size: 13px;
+            background: white;
             outline: none;
         }
 
-        .search-input:focus {
-            border-color: #6b7280;
+        .controls input {
+            width: 220px;
         }
 
-        .search-button {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 5px;
-            background: #343a40;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
+        .date-range-controls input {
+            width: 150px;
         }
 
-        .search-button:hover {
-            background: #20252a;
+        .controls select:focus,
+        .controls input:focus {
+            border-color: #2563eb;
         }
 
-        .clear-button {
-            padding: 10px 14px;
-            border: 1px solid #cfd3d8;
-            border-radius: 5px;
-            background: white;
-            color: #555;
-            text-decoration: none;
-            font-size: 14px;
-        }
+        /* =========================
+           TABLE
+        ========================= */
 
-        .table-container {
+        .table-wrapper {
             overflow-x: auto;
         }
 
@@ -192,373 +328,1074 @@
         }
 
         th {
-            background: #f7f7f8;
-            color: #555;
-            font-size: 12px;
+            background: #f9fafb;
+            color: #6b7280;
+            font-size: 11px;
             text-align: left;
-            padding: 14px 16px;
-            border-bottom: 1px solid #e5e5e5;
+            padding: 13px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
         }
 
         td {
             padding: 15px 16px;
-            border-bottom: 1px solid #eeeeee;
-            font-size: 14px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+            color: #374151;
+            vertical-align: middle;
         }
 
-        tr:hover {
-            background: #fafafa;
+        tbody tr:hover {
+            background: #f9fafb;
         }
 
-        .ticket-link {
-            color: #343a40;
-            font-weight: bold;
+        .ticket-number {
+            color: #2563eb;
+            font-weight: 600;
             text-decoration: none;
         }
 
-        .ticket-link:hover {
+        .ticket-number:hover {
             text-decoration: underline;
         }
 
-        .badge {
+        .requester-name {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .department {
+            color: #4b5563;
+        }
+
+        .subject {
+            max-width: 260px;
+        }
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status-badge {
             display: inline-block;
             padding: 5px 9px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .priority-low {
-            background: #e8f3ec;
-            color: #356346;
-        }
-
-        .priority-medium {
-            background: #f4efdf;
-            color: #76632d;
-        }
-
-        .priority-high {
-            background: #f7e7dc;
-            color: #8a4f2b;
-        }
-
-        .priority-critical {
-            background: #f2dddd;
-            color: #8a3535;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
         }
 
         .status-open {
-            background: #e8edf2;
-            color: #485765;
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-assigned {
+            background: #dbeafe;
+            color: #1d4ed8;
         }
 
         .status-progress {
-            background: #eee9dc;
-            color: #6d5d32;
+            background: #ede9fe;
+            color: #6d28d9;
         }
 
         .status-resolved {
-            background: #e5eee8;
-            color: #42624c;
+            background: #dcfce7;
+            color: #166534;
         }
 
-        .empty {
+        /* =========================
+           PRIORITY
+        ========================= */
+
+        .priority-high,
+        .priority-critical {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .priority-medium {
+            color: #d97706;
+            font-weight: 600;
+        }
+
+        .priority-low {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty-state {
+            padding: 55px 20px;
             text-align: center;
-            padding: 45px;
-            color: #777;
+            color: #6b7280;
         }
 
-        .create-button {
-            display: inline-block;
-            padding: 10px 15px;
-            background: #343a40;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 14px;
+        .empty-state h4 {
+            color: #374151;
+            margin-bottom: 7px;
+            font-size: 16px;
         }
 
-        .create-button:hover {
-            background: #20252a;
+        .empty-state p {
+            font-size: 13px;
         }
 
-        @media (max-width: 900px) {
-            .sidebar {
-                width: 190px;
+        #filterEmptyState {
+            display: none;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            margin-top: auto;
+            padding: 18px 30px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 11px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1200px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
 
-            .main {
-                margin-left: 190px;
-            }
+        }
 
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        @media (max-width: 850px) {
 
-            .section-header {
-                align-items: flex-start;
+            .layout {
                 flex-direction: column;
             }
 
-            .search-form {
-                width: 100%;
-            }
-
-            .search-input {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 600px) {
             .sidebar {
-                position: relative;
                 width: 100%;
-                height: auto;
+                padding: 15px;
             }
 
-            .logout {
-                position: relative;
-                left: auto;
-                right: auto;
-                bottom: auto;
-                display: block;
+            .brand {
+                padding-bottom: 15px;
+            }
+
+            .nav {
                 margin-top: 15px;
             }
 
-            .main {
-                margin-left: 0;
-                padding: 18px;
+            .nav a {
+                display: inline-block;
+                margin-right: 5px;
+                margin-bottom: 5px;
             }
 
-            .stats {
-                grid-template-columns: 1fr;
+            .sidebar-bottom {
+                margin-top: 10px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .topbar {
+                padding: 18px 20px;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .controls {
+                width: 100%;
+            }
+
+            .controls input {
+                width: 100%;
+            }
+
+            .controls select {
+                width: 100%;
+            }
+
+            .date-range-controls {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .date-range-controls input {
+                width: min(100%, 190px);
             }
 
             .topbar {
                 align-items: flex-start;
                 flex-direction: column;
-                gap: 8px;
             }
 
-            .search-form {
-                flex-wrap: wrap;
-            }
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
 </head>
 
 <body>
 
+<div class="layout">
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
     <aside class="sidebar">
 
-        <div class="brand">
-            IT Help Desk
+        <a class="brand-lockup" href="{{ url_for('dashboard') }}">
+            <img
+                class="brand-mark"
+                src="{{ url_for('static', filename='img/it-support-mark.svg') }}"
+                alt=""
+                width="38"
+                height="38"
+            >
+            <span class="brand-copy">
+                <strong>ICT Service Desk</strong>
+                <small>Support operations</small>
+            </span>
+        </a>
+
+
+        <nav class="nav">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="active"
+            >
+                Dashboard
+            </a>
+
+
+            {% if staff["role"] == "admin" %}
+
+                <a href="{{ url_for('admin_staff') }}">
+                    ICT Staff & Coverage
+                </a>
+
+            {% endif %}
+
+
+            <a href="{{ url_for('home') }}">
+                Submit Request
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-user">
+
+                Signed in as:
+                <strong>
+                    {{ staff["name"] }}
+                </strong>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('logout') }}"
+                class="logout"
+            >
+                Sign Out
+            </a>
+
         </div>
-
-        <div class="nav-title">
-            Navigation
-        </div>
-
-        <a href="/dashboard" class="nav-link">
-            Dashboard
-        </a>
-
-        <a href="/" class="nav-link">
-            Create Ticket
-        </a>
-
-        <a href="/logout" class="logout">
-            Logout
-        </a>
 
     </aside>
 
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
     <main class="main">
 
-        <div class="topbar">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
             <div>
-                <h1>Technician Dashboard</h1>
-            </div>
 
-            <div class="user">
-                Logged in as Technician
-            </div>
-        </div>
+                <h2>
 
-        <div class="stats">
+                    {% if staff["role"] == "admin" %}
 
-            <div class="stat-card">
-                <div class="stat-label">Total Tickets</div>
-                <div class="stat-number">{{ total_tickets }}</div>
-            </div>
+                        ICT Dashboard
 
-            <div class="stat-card">
-                <div class="stat-label">Open</div>
-                <div class="stat-number">{{ open_tickets }}</div>
-            </div>
+                    {% else %}
 
-            <div class="stat-card">
-                <div class="stat-label">In Progress</div>
-                <div class="stat-number">{{ in_progress_tickets }}</div>
-            </div>
+                        Technician Dashboard
 
-            <div class="stat-card">
-                <div class="stat-label">Resolved</div>
-                <div class="stat-number">{{ resolved_tickets }}</div>
-            </div>
-
-        </div>
-
-        <section class="section">
-
-            <div class="section-header">
-
-                <h2>Support Tickets</h2>
-
-                <form method="GET" action="/dashboard" class="search-form">
-
-                    <input
-                        type="text"
-                        name="search"
-                        class="search-input"
-                        placeholder="Search tickets..."
-                        value="{{ search }}"
-                    >
-
-                    <button type="submit" class="search-button">
-                        Search
-                    </button>
-
-                    {% if search %}
-                        <a href="/dashboard" class="clear-button">
-                            Clear
-                        </a>
                     {% endif %}
 
-                </form>
+                </h2>
 
-                <a href="/" class="create-button">
-                    Create Ticket
-                </a>
+
+                <p>
+
+                    {% if staff["role"] == "admin" %}
+
+                        Monitor and manage organization-wide IT support requests.
+
+                    {% else %}
+
+                        Manage support requests from your assigned service areas.
+
+                    {% endif %}
+
+                </p>
 
             </div>
 
-            {% if search %}
-                <div style="padding: 15px 20px; color: #666; font-size: 13px;">
-                    Search results for: <strong>{{ search }}</strong>
-                </div>
-            {% endif %}
 
-            <div class="table-container">
+            <div class="role-badge">
 
-                {% if tickets %}
+                {% if staff["role"] == "admin" %}
 
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Ticket</th>
-                            <th>Requester</th>
-                            <th>Subject</th>
-                            <th>Priority</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        {% for ticket in tickets %}
-
-                        <tr>
-
-                            <td>
-                                <a
-                                    href="/ticket/{{ ticket['id'] }}"
-                                    class="ticket-link"
-                                >
-                                    #{{ ticket['id'] }}
-                                </a>
-                            </td>
-
-                            <td>
-                                {{ ticket['name'] }}
-                            </td>
-
-                            <td>
-                                {{ ticket['subject'] }}
-                            </td>
-
-                            <td>
-
-                                {% if ticket['priority'] == 'Low' %}
-                                    <span class="badge priority-low">
-                                        Low
-                                    </span>
-
-                                {% elif ticket['priority'] == 'Medium' %}
-                                    <span class="badge priority-medium">
-                                        Medium
-                                    </span>
-
-                                {% elif ticket['priority'] == 'High' %}
-                                    <span class="badge priority-high">
-                                        High
-                                    </span>
-
-                                {% else %}
-                                    <span class="badge priority-critical">
-                                        Critical
-                                    </span>
-                                {% endif %}
-
-                            </td>
-
-                            <td>
-
-                                {% if ticket['status'] == 'Open' %}
-
-                                    <span class="badge status-open">
-                                        Open
-                                    </span>
-
-                                {% elif ticket['status'] == 'In Progress' %}
-
-                                    <span class="badge status-progress">
-                                        In Progress
-                                    </span>
-
-                                {% else %}
-
-                                    <span class="badge status-resolved">
-                                        Resolved
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
+                    ICT Administrator
 
                 {% else %}
 
-                    <div class="empty">
-                        No tickets found.
-                    </div>
+                    ICT Technician
 
                 {% endif %}
 
             </div>
 
+        </header>
+
+
+        <section class="content">
+
+
+            <!-- =========================
+                 TECHNICIAN COVERAGE
+            ========================== -->
+
+            {% if staff["role"] == "technician" %}
+
+                <section class="coverage-card">
+
+                    <div class="coverage-title">
+                        YOUR COVERAGE AREAS
+                    </div>
+
+
+                    {% if coverage %}
+
+                        <div class="coverage-list">
+
+                            {% for area in coverage %}
+
+                                <span class="coverage-item">
+                                    {{ area }}
+                                </span>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="coverage-empty">
+
+                            No coverage areas have been assigned to your account yet.
+
+                        </div>
+
+                    {% endif %}
+
+                </section>
+
+            {% endif %}
+
+
+            <!-- =========================
+                 STATISTICS
+            ========================== -->
+
+            <section class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Total Requests
+                    </div>
+
+                    <div class="stat-value">
+                        {{ total_tickets }}
+                    </div>
+
+                    {% if staff["role"] == "technician" %}
+
+                        <div class="stat-note">
+                            Tickets in your coverage
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Open
+                    </div>
+
+                    <div class="stat-value">
+                        {{ open_tickets }}
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Assigned
+                    </div>
+
+                    <div class="stat-value">
+                        {{ assigned_tickets }}
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        In Progress
+                    </div>
+
+                    <div class="stat-value">
+                        {{ in_progress_tickets }}
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        High / Critical
+                    </div>
+
+                    <div class="stat-value">
+                        {{ high_priority_tickets }}
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Resolved
+                    </div>
+
+                    <div class="stat-value">
+                        {{ resolved_tickets }}
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 SUPPORT REQUESTS
+            ========================== -->
+
+            <section class="requests-card">
+
+
+                <div class="requests-header">
+
+                    <div>
+
+                        <h3>
+                            Support Requests
+                        </h3>
+
+
+                        <p>
+
+                            {% if staff["role"] == "admin" %}
+
+                                All hospital ICT support requests
+
+                            {% else %}
+
+                                Requests from your assigned coverage areas
+
+                            {% endif %}
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="controls">
+
+                        <label class="control-label" for="dateFilter">
+                            Date
+                        </label>
+                        <select
+                            id="dateFilter"
+                            onchange="changePeriod()"
+                            aria-label="Filter requests by date"
+                        >
+                            {% for value, label in period_options.items() %}
+                                <option
+                                    value="{{ value }}"
+                                    {% if period == value %}selected{% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <div
+                            id="customDateRange"
+                            class="date-range-controls"
+                            {% if period != 'custom' %}hidden{% endif %}
+                        >
+                            <label class="control-label" for="startDate">
+                                From
+                            </label>
+                            <input
+                                type="date"
+                                id="startDate"
+                                value="{{ start_date }}"
+                                aria-label="Custom range start date"
+                            >
+                            <label class="control-label" for="endDate">
+                                To
+                            </label>
+                            <input
+                                type="date"
+                                id="endDate"
+                                value="{{ end_date }}"
+                                aria-label="Custom range end date"
+                            >
+                            <button
+                                type="button"
+                                class="btn-primary btn-small"
+                                onclick="applyCustomRange()"
+                            >
+                                Apply
+                            </button>
+                        </div>
+
+                        <select
+                            id="statusFilter"
+                            onchange="filterTickets()"
+                        >
+
+                            <option value="All">
+                                All Statuses
+                            </option>
+
+                            <option value="Open">
+                                Open
+                            </option>
+
+                            <option value="Assigned">
+                                Assigned
+                            </option>
+
+                            <option value="In Progress">
+                                In Progress
+                            </option>
+
+                            <option value="Resolved">
+                                Resolved
+                            </option>
+
+                        </select>
+
+
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Search requests..."
+                            value="{{ search }}"
+                            onkeyup="searchTickets()"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+
+                    <table>
+
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Ticket
+                                </th>
+
+                                <th>
+                                    Requester
+                                </th>
+
+                                <th>
+                                    Department / Area
+                                </th>
+
+                                <th>
+                                    Subject
+                                </th>
+
+                                <th>
+                                    Priority
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Assigned To
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="ticketTableBody">
+
+
+                            {% for ticket in tickets %}
+
+                                <tr
+                                    data-status="{{ ticket['status'] }}"
+                                    data-search="{{ ticket['ticket_number'] if ticket['ticket_number'] else '' }} {{ ticket['name'] }} {{ ticket['department'] }} {{ ticket['subject'] }} {{ ticket['description'] }}"
+                                >
+
+
+                                    <td>
+
+                                        <a
+                                            href="{{ url_for('ticket_details', ticket_id=ticket['id']) }}"
+                                            class="ticket-number"
+                                        >
+
+                                            KCRH-ICT-{{ "%05d"|format(ticket['id']) }}
+
+                                        </a>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="requester-name">
+                                            {{ ticket["name"] }}
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="department">
+                                            {{ ticket["department"] }}
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="subject">
+                                            {{ ticket["subject"] }}
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if ticket["priority"] == "Critical" %}
+
+                                            <span class="priority-critical">
+                                                Critical
+                                            </span>
+
+                                        {% elif ticket["priority"] == "High" %}
+
+                                            <span class="priority-high">
+                                                High
+                                            </span>
+
+                                        {% elif ticket["priority"] == "Medium" %}
+
+                                            <span class="priority-medium">
+                                                Medium
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="priority-low">
+                                                Low
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if ticket["status"] == "Open" %}
+
+                                            <span class="status-badge status-open">
+                                                Open
+                                            </span>
+
+                                        {% elif ticket["status"] == "Assigned" %}
+
+                                            <span class="status-badge status-assigned">
+                                                Assigned
+                                            </span>
+
+                                        {% elif ticket["status"] == "In Progress" %}
+
+                                            <span class="status-badge status-progress">
+                                                In Progress
+                                            </span>
+
+                                        {% elif ticket["status"] == "Resolved" %}
+
+                                            <span class="status-badge status-resolved">
+                                                Resolved
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="status-badge">
+                                                {{ ticket["status"] }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if ticket["assigned_staff_name"] %}
+
+                                            {{ ticket["assigned_staff_name"] }}
+
+                                        {% else %}
+
+                                            <span style="color:#9ca3af;">
+                                                Unassigned
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ ticket["created_at"] }}
+
+                                    </td>
+
+
+                                </tr>
+
+                            {% else %}
+
+
+                                <tr>
+
+                                    <td colspan="8">
+
+                                        <div class="empty-state">
+
+                                            <h4>
+                                                No support requests found
+                                            </h4>
+
+                                            <p>
+                                                There are currently no ICT support requests to display.
+                                            </p>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+
+                    <!-- FILTER EMPTY STATE -->
+
+                    <div
+                        id="filterEmptyState"
+                        class="empty-state"
+                    >
+
+                        <h4>
+                            No matching requests
+                        </h4>
+
+                        <p>
+                            No requests match the selected status or search term.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
         </section>
 
+
+        <!-- =========================
+             FOOTER
+        ========================== -->
+
+        <footer class="footer">
+
+            ICT Service Desk · Support operations
+
+        </footer>
+
+
     </main>
+
+</div>
+
+
+<script>
+
+    function filterTickets() {
+
+        const selectedStatus =
+            document.getElementById("statusFilter").value;
+
+        const searchInput =
+            document.getElementById("searchInput").value
+                .toLowerCase()
+                .trim();
+
+        const rows =
+            document.querySelectorAll("#ticketTableBody tr");
+
+        const emptyState =
+            document.getElementById("filterEmptyState");
+
+        let visibleRows = 0;
+
+
+        rows.forEach(function(row) {
+
+            const ticketStatus =
+                row.getAttribute("data-status") || "";
+
+            const searchText =
+                (row.getAttribute("data-search") || "")
+                    .toLowerCase();
+
+
+            const statusMatches =
+                selectedStatus === "All" ||
+                ticketStatus === selectedStatus;
+
+
+            const searchMatches =
+                searchText.includes(searchInput);
+
+
+            if (
+                statusMatches &&
+                searchMatches
+            ) {
+
+                row.style.display = "";
+
+                visibleRows++;
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+
+        if (emptyState) {
+
+            if (visibleRows === 0) {
+
+                emptyState.style.display = "block";
+
+            } else {
+
+                emptyState.style.display = "none";
+
+            }
+
+        }
+
+    }
+
+
+    function searchTickets() {
+
+        filterTickets();
+
+    }
+
+    function changePeriod() {
+
+        const params =
+            new URLSearchParams(window.location.search);
+        const selectedPeriod =
+            document.getElementById("dateFilter").value;
+
+        if (selectedPeriod === "custom") {
+            document.getElementById(
+                "customDateRange"
+            ).hidden = false;
+            return;
+        }
+
+        document.getElementById(
+            "customDateRange"
+        ).hidden = true;
+
+        const search =
+            document.getElementById("searchInput").value.trim();
+
+        params.set("period", selectedPeriod);
+        params.delete("start_date");
+        params.delete("end_date");
+        if (search) {
+            params.set("search", search);
+        } else {
+            params.delete("search");
+        }
+
+        window.location.search = params.toString();
+
+    }
+
+    function applyCustomRange() {
+
+        const startInput =
+            document.getElementById("startDate");
+        const endInput =
+            document.getElementById("endDate");
+        const startDate = startInput.value;
+        const endDate = endInput.value;
+
+        if (!startDate || !endDate) {
+            startInput.required = true;
+            endInput.required = true;
+            startInput.reportValidity();
+            endInput.reportValidity();
+            return;
+        }
+
+        if (startDate > endDate) {
+            endInput.setCustomValidity(
+                "The end date cannot be before the start date."
+            );
+            endInput.reportValidity();
+            endInput.setCustomValidity("");
+            return;
+        }
+
+        const params =
+            new URLSearchParams(window.location.search);
+        params.set("period", "custom");
+        params.set("start_date", startDate);
+        params.set("end_date", endDate);
+
+        const search =
+            document.getElementById("searchInput").value.trim();
+        if (search) {
+            params.set("search", search);
+        } else {
+            params.delete("search");
+        }
+
+        window.location.search = params.toString();
+
+    }
+
+
+    /*
+     * Apply filters when the dashboard first loads.
+     * This is useful when the page was opened with
+     * an existing search parameter.
+     */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            filterTickets();
+
+        }
+    );
+
+</script>
 
 </body>
 </html>

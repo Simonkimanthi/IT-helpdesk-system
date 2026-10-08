@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Ticket Submitted | IT Help Desk</title>
+    <title>Request submitted | ICT Service Desk</title>
 
     <style>
         * {
@@ -15,116 +15,187 @@
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background: #f4f5f7;
-            color: #252525;
+            background: #f4f7fb;
+            color: #1f2937;
             min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #0f172a;
+            color: white;
+            padding: 22px 6%;
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .brand-subtitle {
+            color: #cbd5e1;
+            font-size: 12px;
+            margin-top: 4px;
         }
 
         .container {
-            width: 100%;
-            max-width: 520px;
-            padding: 20px;
+            width: 92%;
+            max-width: 700px;
+            margin: 60px auto;
+            flex: 1;
         }
 
-        .card {
+        .success-card {
             background: white;
-            border: 1px solid #dedfe1;
-            border-radius: 8px;
-            padding: 45px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 45px 35px;
             text-align: center;
+            box-shadow: 0 5px 20px rgba(15, 23, 42, 0.07);
         }
 
-        .mark {
-            width: 55px;
-            height: 55px;
+        .success-icon {
+            width: 70px;
+            height: 70px;
             margin: 0 auto 22px;
-            border: 2px solid #4d6b57;
             border-radius: 50%;
+            background: #dcfce7;
+            color: #15803d;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #4d6b57;
-            font-size: 25px;
+            font-size: 34px;
             font-weight: bold;
         }
 
         h1 {
-            font-size: 24px;
-            color: #252a31;
+            color: #0f172a;
+            font-size: 27px;
             margin-bottom: 12px;
         }
 
         .message {
-            color: #666;
+            color: #64748b;
             line-height: 1.6;
-            margin-bottom: 25px;
+            font-size: 15px;
+            max-width: 520px;
+            margin: 0 auto 28px;
         }
 
         .ticket-box {
-            background: #f5f6f7;
-            border: 1px solid #e0e2e4;
-            border-radius: 6px;
-            padding: 18px;
-            margin-bottom: 28px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 22px;
+            margin: 25px auto;
         }
 
         .ticket-label {
-            display: block;
-            color: #777;
+            color: #64748b;
             font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 7px;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
         .ticket-number {
+            color: #2563eb;
             font-size: 25px;
             font-weight: bold;
-            color: #343a40;
+            letter-spacing: 0.5px;
         }
 
-        .actions {
+        .routing-message {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            border-radius: 8px;
+            padding: 14px;
+            margin: 20px auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .queue-message {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            border-radius: 8px;
+            padding: 14px;
+            margin: 20px auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .buttons {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
+            margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         .button {
             display: inline-block;
-            padding: 11px 18px;
-            border-radius: 5px;
+            padding: 12px 20px;
+            border-radius: 7px;
             text-decoration: none;
             font-size: 14px;
+            font-weight: bold;
         }
 
         .primary {
-            background: #343a40;
+            background: #2563eb;
             color: white;
         }
 
         .primary:hover {
-            background: #20252a;
+            background: #1d4ed8;
         }
 
         .secondary {
-            border: 1px solid #cfd3d8;
-            color: #444;
             background: white;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
         }
 
         .secondary:hover {
-            background: #f5f5f5;
+            background: #eff6ff;
         }
 
-        @media (max-width: 500px) {
-            .card {
-                padding: 35px 25px;
+        .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 94%;
+                margin: 35px auto;
             }
 
-            .actions {
+            .success-card {
+                padding: 35px 22px;
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+
+            .ticket-number {
+                font-size: 21px;
+            }
+
+            .buttons {
                 flex-direction: column;
             }
 
@@ -133,52 +204,119 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
 </head>
 
 <body>
 
-    <div class="container">
 
-        <div class="card">
+<header class="header">
 
-            <div class="mark">
-                ✓
+    <div class="header-inner">
+
+        <div class="brand-lockup">
+            <img
+                class="brand-mark"
+                src="{{ url_for('static', filename='img/it-support-mark.svg') }}"
+                alt=""
+                width="42"
+                height="42"
+            >
+            <div class="brand-copy">
+                <strong>ICT Service Desk</strong>
+                <small>Technology support, made clear</small>
+            </div>
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <div class="success-card">
+
+
+        <div class="success-icon">
+            REQUEST RECEIVED
+        </div>
+
+
+        <h1>
+            Support Request Submitted
+        </h1>
+
+
+        <p class="message">
+            Your ICT support request has been successfully received.
+            Please keep the ticket number below for reference.
+        </p>
+
+
+        <div class="ticket-box">
+
+            <div class="ticket-label">
+                Ticket Number
             </div>
 
-            <h1>Ticket Submitted</h1>
-
-            <p class="message">
-                Your support request has been successfully received.
-                A technician will review the ticket and take the necessary action.
-            </p>
-
-            <div class="ticket-box">
-
-                <span class="ticket-label">
-                    Your Ticket Number
-                </span>
-
-                <div class="ticket-number">
-                    #{{ ticket_id }}
-                </div>
-
-            </div>
-
-            <div class="actions">
-
-                <a href="/" class="button primary">
-                    Submit Another Ticket
-                </a>
-
-                <a href="/login" class="button secondary">
-                    Technician Login
-                </a>
-
+            <div class="ticket-number">
+                {{ display_ticket_number }}
             </div>
 
         </div>
 
+
+        {% if assigned %}
+
+            <div class="routing-message">
+
+                Your request has been automatically routed to
+                the appropriate ICT support area for review.
+
+            </div>
+
+        {% else %}
+
+            <div class="queue-message">
+
+                Your request has been added to the ICT support queue
+                and will be reviewed by the ICT administrator for
+                assignment.
+
+            </div>
+
+        {% endif %}
+
+
+        <div class="buttons">
+
+            <a
+                href="/"
+                class="button primary"
+            >
+                Submit Another Request
+            </a>
+
+
+            <a
+                href="/login"
+                class="button secondary"
+            >
+                ICT Staff Login
+            </a>
+
+        </div>
+
     </div>
+
+</main>
+
+
+<footer class="footer">
+    ICT Service Desk · Internal support portal
+</footer>
+
 
 </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Technician Login | IT Help Desk</title>
+    <title>Staff sign in | ICT Service Desk</title>
 
     <style>
         * {
@@ -15,7 +15,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            background: #e8eef5;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -30,7 +30,7 @@
 
         .login-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 4px;
             padding: 40px;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
         }
@@ -40,7 +40,7 @@
             height: 65px;
             background: #2563eb;
             color: white;
-            border-radius: 14px;
+            border-radius: 3px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -76,7 +76,7 @@
             width: 100%;
             padding: 13px;
             border: 1px solid #cbd5e1;
-            border-radius: 8px;
+            border-radius: 3px;
             font-size: 15px;
             outline: none;
         }
@@ -92,7 +92,7 @@
             background: #2563eb;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 2px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
@@ -106,7 +106,7 @@
             background: #fee2e2;
             color: #b91c1c;
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 3px;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -130,6 +130,7 @@
             margin-top: 20px;
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
 </head>
 
 <body>
@@ -138,12 +139,18 @@
 
     <div class="login-card">
 
-        <div class="logo">IT</div>
+        <img
+            class="logo"
+            src="{{ url_for('static', filename='img/it-support-mark.svg') }}"
+            alt=""
+            width="58"
+            height="58"
+        >
 
-        <h1>Technician Login</h1>
+        <h1>Staff Sign In</h1>
 
         <p class="subtitle">
-            IT Help Desk Management System
+            Sign in to support operations
         </p>
 
         {% if error %}
@@ -152,7 +159,7 @@
             </div>
         {% endif %}
 
-        <form method="POST" action="/login">
+        <form method="POST" action="{{ url_for('login') }}">
 
             <div class="form-group">
                 <label for="username">Username</label>
@@ -185,13 +192,13 @@
         </form>
 
         <a href="/" class="back-link">
-            ← Back to Help Desk
+            Back to service desk
         </a>
 
     </div>
 
     <div class="footer">
-        IT Help Desk System © 2026
+        ICT Service Desk · Internal support portal
     </div>
 
 </div>
